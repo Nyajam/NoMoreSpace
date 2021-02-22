@@ -1,0 +1,51 @@
+{{>head}}
+<header>
+	<h1>{{titleApp}}</h1>
+	<h3>{{titlePage}}</h3>
+</header>
+<nav>
+	<p>User: {{userName}}</p>
+	<hr/>
+	<h4>Navigation:</h4>
+	<a href="login">Close session</a>
+	<br/>
+	<a href="home">My home</a>
+	<br/>
+	{{#admin}}
+		<a href="adm">Administration panel</a>
+		<br/>
+	{{/admin}}
+</nav>
+<section>
+		<article class="firstSection">
+			<h3>My files upload</h3>
+			<ul>
+				<li>Mi cuota: {{userSizePoolMax}}</li>
+				<li>Espacio ocupado: {{userSizePool}}</li>
+				<li>Archivos subidos: {{userSizePoolFiles}}</li>
+				<li>Porcentaje de espacio ocupado: {{userSizePoolPercent}}%</li>
+			</ul>
+			<hr/>
+		</article>
+		<article>
+			<h3>My user settings</h3>
+			<p>My actual email: {{userMail}}</p>
+			<form>
+				<input type="email" name="newMail" placeholder="name@domain.com"/>
+				<br/>
+				<input type="submit" name="changeMail" value="Change my email"/>
+			</form>
+			<p>Change my password:</p>
+			<form>
+				<input type="password" name="passwd" placeholder="New password"/>
+				<br/>
+				<input type="password" name="passwdChk" placeholder="Repeat the new password"/>
+				<br/>
+				<input type="submit" name="changePassword" value="Change my password"/>
+			</form>
+		</article>
+</section>
+<aside>
+	<p>Información sobre un elemento</p>
+</aside>
+{{>foot}}
