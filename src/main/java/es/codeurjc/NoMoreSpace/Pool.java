@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
 
@@ -17,17 +18,23 @@ public class Pool {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long pool_id;
 	
-	private long name;
-	
-	
-	
 	@OneToOne(mappedBy="pool")
 	private User user;
+	@ManyToMany
+	private List<Block> blocks;
 	@OneToMany
-	private List<Block> block;
-	@OneToMany
-	private File file;
+	private List<File> file;
 	
+	
+	protected Pool() {}
+
+
+	@Override
+	public String toString() {
+		return "Pool [pool_id=" + pool_id + ", user=" + user + ", blocks=" + blocks + ", file=" + file + "]";
+	}
+
+
 	
 	
 }
