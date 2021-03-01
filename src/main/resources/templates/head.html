@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="title" content={{titleApp}}>
     <meta name="description" content="Sube tus archivos de manera distribuida!">
+    <link rel="icon" type="image/jpg" href="https://estaticos.muyinteresante.es/media/cache/1140x_thumb/uploads/images/gallery/59c4f5655bafe82c692a7052/gato-marron_0.jpg"/>
     <style type="text/css">
     	{{>estilo.css}}
     </style>
@@ -17,9 +18,9 @@
 			else
 				tmp.style.display="none";
 		}
-		function samePasswd(name)
+		function samePasswd(form)
 		{
-			if (document.forms[name]["passwd"].value != document.forms[name]["passwd2"].value)
+			if (document.forms[form]["passwd"].value != document.forms[form]["passwd2"].value)
 			{
 				alert("The password are not same!");
 				return false;
