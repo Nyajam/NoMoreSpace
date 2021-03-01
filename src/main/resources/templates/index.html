@@ -1,10 +1,27 @@
 {{>head}}
-<header>
-	<h1> {{titleApp}} </h1>      
-</header>
-<div id="indexCentrator"></div>
-<div id="indexNotes">      
-		<p>Aplicación de la práctica de Desarrollo de Aplicaciones Distribuidas de la URJC, curso 2020/2021: NoMoreSpacePlease!</p>
-		<a href="login">Login</a>
+<div id="indexNotes">
+	<h1>NoMoreSpace - NoMoreSpacePlease!</h1>
+	<hr/>
+	<p>Aplicación de la práctica de Desarrollo de Aplicaciones Distribuidas de la URJC, curso 2020/2021: NoMoreSpacePlease!</p>
+	<p>Este proyecto busca la creación de una web de almacenamiento de ficheros de manera distribuida, sin contar con un (por ejemplo) servidor NFS centralizado. En su lugar tendrá "instancias" permanentes que almacenen estos ficheros y pueda escalar en función de los requisitos ademas de soportar tolerancia a fallos (replicación). Cabe destacar que esas instancias, aun no tenemos la certeza de qué serán finalmente, por el momento los llamaremos "Bloques".</p>
+	<h1>Entidades previstas para la aplicación:</h1>
+	<ul>
+		<li>Usuario(s) -> Que emplean la aplicación.</li>
+		<li>Fichero(s) -> Que pueden ser gestionados por los usuarios (ademas de atributos internos, como un fichero que puede estar en N fragmentos).</li>
+		<li>Pool(s) -> Agrupación o relación entre bloques y ficheros (contiene el mapa de donde esta un fichero, en cuantos bloques está dividido y donde se encuentran estos).</li>
+		<li>Bloque(s) -> Nodos, instancias...(pendiente de desarrollo) donde se encuentran físicamente los ficheros, si un fichero es más grande que un bloque, puede estar repartido entre varios.</li>
+		<li>Panel(s) -> Representación de como es el árbol de directorios de un usuario (una carpeta es una separación visual de un árbol de directorios).</li>
+	</ul>
+	<h1>Servicio interno:</h1>
+	<ul>
+		<li>El servicio interno va a ser el encargado de calcular los bloques necesarios para almacenar un archivo. Una vez calculados los bloques que necesita los solicita al servidor.El servidor responde con la localización e identificador de los bloques.</li>
+		<li>El servicio interno realiza la conexión con los distintos proveedores de almacenamiento que tienen esos bloques y transfiere los archivos.</li>
+	</ul>
+	<h1>Autores/Integrantes del proyecto</h1>
+	<ul>
+		<li>Ildefonso Macarro Pueyo <a href="mailto:i.macarro.2016@alumnos.urjc.es">i.macarro.2016@alumnos.urjc.es</a></li>
+		<li>Javier Lamparero López <a href="mailto:j.lamparero@alumnos.urjc.es">j.lamparero@alumnos.urjc.es</a></li>
+	</ul>
 </div>
+
 {{>foot}}

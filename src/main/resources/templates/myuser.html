@@ -1,21 +1,4 @@
 {{>head}}
-<header>
-	<h1>{{titleApp}}</h1>
-	<h3>{{titlePage}}</h3>
-</header>
-<nav>
-	<p>User: {{userName}}</p>
-	<hr/>
-	<h4>Navigation:</h4>
-	<a href="login">Close session</a>
-	<br/>
-	<a href="home">My home</a>
-	<br/>
-	{{#admin}}
-		<a href="adm">Administration panel</a>
-		<br/>
-	{{/admin}}
-</nav>
 <section>
 		<article class="firstSection">
 			<h3>My files upload</h3>
@@ -25,9 +8,8 @@
 				<li>Archivos subidos: {{userSizePoolFiles}}</li>
 				<li>Porcentaje de espacio ocupado: {{userSizePoolPercent}}%</li>
 			</ul>
-			<hr/>
 		</article>
-		<article>
+		<article class="firstSection">
 			<h3>My user settings</h3>
 			<p>My actual email: {{userMail}}</p>
 			<form>

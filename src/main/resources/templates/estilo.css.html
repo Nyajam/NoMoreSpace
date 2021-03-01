@@ -1,18 +1,14 @@
-#indexCentrator
-{
-	width: 25%;
-	height: 1px;
-	float: left;
-}
 #indexNotes
 {
 	width: 50%;
 	float: left;
 	border-radius: 5px;
+	margin-top: 80px;
+	margin-left: 25%;
 }
 body
 {
-	background: #0070ff87;
+	background: white;
 	{{#panelCSS}}
 		text-align: center;
 	{{/panelCSS}}
@@ -27,21 +23,22 @@ body
 }
 header
 {
-	margin: 15px;
+	/*margin: 15px;*/
+	text-align: left;
 }
 nav
 {
-	float: left;
-	width: 23%;
-	margin-top: 15px;
-	margin-left: 1%;
-	margin-right: 1%;
+	background-color: #74b1ff;
+	width: 100%;
+	display: inline-flex;
+	position: fixed;
 }
 section
 {
 	float: left;
 	width: 74%;
-	margin-right: 1%;
+	margin-left: 2%;
+	margin-top: 80px;
 }
 aside
 {
@@ -57,3 +54,76 @@ aside
 {
 	width: 95%;
 }
+#navL
+{
+	display: inline-flex;
+	flex: 0 0;
+	flex-grow: 1;
+	margin-left: 15px;
+}
+#navR
+{
+	display: inline-flex;
+	float: right;
+	margin-right: 15px;
+	margin-top: auto;
+}
+.navBT
+{
+	display: block;
+	text-align: center;
+	color: black;
+	font-size:48px;
+	/*margin-left: 15px;*/
+	margin-top: auto;
+	width: 70px;
+}
+input, button, select
+{
+	color: black;
+	background-color: white;
+	border-radius: 5px;
+	font-size: 12pt;
+}
+@font-face
+{
+	/*https://www.w3schools.com/icons/google_icons_file.asp*/
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-weight: 400;
+	src: url(https://fonts.gstatic.com/s/materialicons/v78/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+}
+.material-icons
+{
+	font-family: 'Material Icons';
+	font-weight: normal;
+	font-style: normal;
+	/*font-size: 24px;*/
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	display: inline-block;
+	white-space: nowrap;
+	word-wrap: normal;
+	direction: ltr;
+	-moz-font-feature-settings: 'liga';
+	-moz-osx-font-smoothing: grayscale;
+}
+a
+{
+	/*color: black;*/
+	text-decoration: none;
+}
+#logo
+{
+	vertical-align: middle;
+	margin: 10px;
+}
+ul
+{
+	text-align: left;
+}
+h1
+{
+	color: black;
+	}

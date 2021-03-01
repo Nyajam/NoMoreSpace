@@ -1,13 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">  
   <head>    
-    <title>NoMoreSpacePlease!</title>    
+    <title>{{titleApp}}</title>    
     <meta charset="UTF-8">
-    <meta name="title" content="NoMoreSpacePlease!">
-    <meta name="description" content="Sube tus archivos de manera distribuida!">    
-    <!--<link href="estilo.css" rel="stylesheet" type="text/css"/>-->
+    <meta name="title" content={{titleApp}}>
+    <meta name="description" content="Sube tus archivos de manera distribuida!">
     <style type="text/css">
     	{{>estilo.css}}
     </style>
-  </head>  
-  <body>
+    <script type="text/javascript">
+		function desplegar(elemento)
+		{
+			var tmp=document.getElementById(elemento);
+			if(tmp.style.display=="none")
+				tmp.style.display="block";
+			else
+				tmp.style.display="none";
+		}
+	</script>
+	</head>  
+	<body>
+		<header>
+			<nav>
+				<div id=navL>
+					<a href="/">
+						<img id="logo" src="https://estaticos.muyinteresante.es/media/cache/1140x_thumb/uploads/images/gallery/59c4f5655bafe82c692a7052/gato-marron_0.jpg" alt="Logo {{titleApp}}" width="60" height="60"/>
+						<h1 style="display: inline-flex; font-size: x-large;">{{titleApp}}</h1>
+					</a>
+				</div>
+				<div id=navR>
+					{{#index}}
+						<a class="navBT" href="newuser" {{#newuser}} style="background-color: gray;" {{/newuser}} >
+							<i class="material-icons">person_add</i>
+						</a>
+						<a class="navBT" href="login" {{#login}} style="background-color: gray;" {{/login}} >
+							<i class="material-icons">input</i>
+						</a>
+					{{/index}}
+					{{^index}}
+						<a class="navBT" href="home" {{#home}} style="background-color: gray;" {{/home}} >
+							<i class="material-icons">folder_open</i>
+						</a>
+						{{#home}}
+							<a class="navBT" href="home">
+								<i class="material-icons">create_new_folder</i>
+							</a>
+							<a class="navBT" href="#" onclick="desplegar('uploadfile')">
+								<i class="material-icons">cloud_upload</i>
+							</a>
+						{{/home}}
+						<a class="navBT" href="myuser" {{#myuser}} style="background-color: gray;" {{/myuser}} >
+							<i class="material-icons">settings</i>
+						</a>
+					{{/index}}
+					{{#admin}}
+						<a class="navBT" href="adm" {{#adm}} style="background-color: gray;" {{/adm}} >
+							<i class="material-icons">supervisor_account</i>
+						</a>
+					{{/admin}}
+					{{^index}}
+						<a class="navBT" href="login" {{#login}} style="background-color: gray;" {{/login}} >
+							<i class="material-icons">close</i>
+						</a>
+					{{/index}}
+				</div>
+			</nav>
+		</header>
