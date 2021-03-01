@@ -17,6 +17,15 @@
 			else
 				tmp.style.display="none";
 		}
+		function samePasswd(name)
+		{
+			if (document.forms[name]["passwd"].value != document.forms[name]["passwd2"].value)
+			{
+				alert("The password are not same!");
+				return false;
+			}
+			return true;
+		}
 	</script>
 	</head>  
 	<body>
@@ -38,9 +47,6 @@
 						</a>
 					{{/index}}
 					{{^index}}
-						<a class="navBT" href="home" {{#home}} style="background-color: gray;" {{/home}} >
-							<i class="material-icons">folder_open</i>
-						</a>
 						{{#home}}
 							<a class="navBT" href="home">
 								<i class="material-icons">create_new_folder</i>
@@ -49,6 +55,9 @@
 								<i class="material-icons">cloud_upload</i>
 							</a>
 						{{/home}}
+						<a class="navBT" href="home" {{#home}} style="background-color: gray;" {{/home}} >
+							<i class="material-icons">folder_open</i>
+						</a>
 						<a class="navBT" href="myuser" {{#myuser}} style="background-color: gray;" {{/myuser}} >
 							<i class="material-icons">settings</i>
 						</a>

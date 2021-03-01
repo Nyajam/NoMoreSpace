@@ -34,7 +34,7 @@ public class ControladorTest
 		model.addAttribute("login",true);
 		model.addAttribute("expulse",false);
 		model.addAttribute("access",false);
-		model.addAttribute("titleApp","NoMereSpacePlease!");
+		model.addAttribute("titleApp","NoMoreSpacePlease!");
 		model.addAttribute("titlePage","Login");
 		return "login";
 	}
@@ -97,6 +97,33 @@ public class ControladorTest
 		}
 	}
 	
+	//Pagina de registro
+	@GetMapping("/newuser")
+	public String newuserPage(Model model)
+	{
+		model.addAttribute("userName","test");
+		model.addAttribute("panelCSS",true);
+		model.addAttribute("newuser",true);
+		model.addAttribute("index",true);
+		model.addAttribute("titleApp","NoMoreSpacePlease!");
+		model.addAttribute("titlePage","Register");
+		return "newuser";
+	}
+	
+	//Pagina gestion de registro
+	@RequestMapping("/newuser")
+	public String newuserPageProcess(Model model, @RequestParam String user, @RequestParam String passwd, @RequestParam String passwd2, @RequestParam String mail)
+	{
+		model.addAttribute("userName","test");
+		model.addAttribute("msg","Usuario creado!");
+		model.addAttribute("panelCSS",true);
+		model.addAttribute("newuser",true);
+		model.addAttribute("index",true);
+		model.addAttribute("titleApp","NoMoreSpacePlease!");
+		model.addAttribute("titlePage","Register");
+		return "newuser";
+	}
+	
 	//Pagina del home del usuario
 	@GetMapping("/home")
 	public String homePage(Model model)
@@ -155,7 +182,7 @@ public class ControladorTest
 		model.addAttribute("adm",true);
 		model.addAttribute("admin",true); //SI EL USUARIO ES ADMINISTRADOR
 		model.addAttribute("titleApp","NoMoreSpacePlease!");
-		model.addAttribute("titlePage","Home");
+		model.addAttribute("titlePage","Administration");
 		return "administration";
 	}
 }
