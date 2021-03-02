@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ControladorTest
 {
+	@Autowired
+	private UserRepository repo;
+	
 	//Pagina del Index
 	@GetMapping("/")
 	public String indexPage(Model model)
@@ -55,25 +59,27 @@ public class ControladorTest
 		model.addAttribute("expulse",user.equals("nobody"));
 		model.addAttribute("access",!user.equals("nobody"));
 		model.addAttribute("msgError","Usuario incorrecto");
-		/*
+		
 		//Comprobacion en la base de datos
-		Optional<User> usuario = posts.findById(id);
+		List<User> usuario = repo.findByUsername(user);
 		//Si usuario esta en la base de datos
-		if( usuario.isPresent() )
+		if( !usuario.isEmpty() )
 		{
 			//Si la passwd es correcta
-			if( usuario.getPassword().equals(passwd) )
+			if( usuario.get(0).getPassword().equals(passwd) )
 			{
 				//Si el usuario no esta bloqueado
-				if(usuario.getLock())
+				if(!usuario.get(0).isBloqueado())
 				{
 					model.addAttribute("expulse",true);
 					sesion.setAttribute("token", user);
+					model.addAttribute("URL","/home");
+					return "hook";
 				}
 				else
 				{
 					model.addAttribute("msgError","Usuario bloqueado");
-					model.addAttribute("access",true);
+					model.addAttribute("expulse",true);
 				}
 			}
 			else
@@ -87,19 +93,12 @@ public class ControladorTest
 			model.addAttribute("msgError","Usuario incorrecto");
 			model.addAttribute("expulse",true);
 		}
-		*/
-		if(user.equals("nobody"))
-			return "login";
-		else
-		{
-			model.addAttribute("URL","/home");
-			return "hook";
-		}
+		return "login";
 	}
 	
 	//Pagina de registro
 	@GetMapping("/newuser")
-	public String newuserPage(Model model)
+	public String newuserPage(Model model, HttpSession sesion)
 	{
 		model.addAttribute("userName","test");
 		model.addAttribute("panelCSS",true);
@@ -126,15 +125,17 @@ public class ControladorTest
 	
 	//Pagina del home del usuario
 	@GetMapping("/home")
-	public String homePage(Model model)
+	public String homePage(Model model, HttpSession sesion)
 	{
 		List<FileTest> filesUser=new LinkedList();
 		for(int i=0;i<20;i++)
 			filesUser.add(new FileTest("file_"+i,i));
-		model.addAttribute("userName","test");
+		String username=(String) sesion.getAttribute("token");
+		model.addAttribute("userName",username);
 		model.addAttribute("filesUser",filesUser);
 		model.addAttribute("panelCSS",false);
-		model.addAttribute("admin",true); //SI EL USUARIO ES ADMINISTRADOR
+		List<User> usuario = repo.findByUsername(username);
+		model.addAttribute("admin",usuario.get(0).isAdmin()); //SI EL USUARIO ES ADMINISTRADOR
 		model.addAttribute("titleApp","NoMoreSpacePlease!");
 		model.addAttribute("titlePage","Home");
 		model.addAttribute("home",true);
@@ -143,7 +144,7 @@ public class ControladorTest
 	
 	//Pagina de gestion del usuario
 	@GetMapping("/myuser")
-	public String myuserPage(Model model)
+	public String myuserPage(Model model, HttpSession sesion)
 	{
 		int size=0;
 		LinkedList<FileTest> filesUser=new LinkedList();
@@ -171,7 +172,7 @@ public class ControladorTest
 	
 	//Pagina de administracion
 	@GetMapping("/adm")
-	public String admPage(Model model)
+	public String admPage(Model model, HttpSession sesion)
 	{
 		List<FileTest> filesUser=new LinkedList();
 		for(int i=0;i<20;i++)
