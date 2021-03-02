@@ -103,7 +103,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [user_id=" + user_id + ", mail=" + mail + ", password=" + password + ", username=" + username
-				+ ", bloqueado=" + bloqueado + ", admin=" + admin + ", pool=" + pool + ", panel=" + panel + "]";
+				+ ", bloqueado=" + bloqueado + ", admin=" + admin + ", pool=" + pool + "]";
 	}
 
 

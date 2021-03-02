@@ -18,11 +18,13 @@ public class ControladorBBDD implements CommandLineRunner {
 		repo.save(new User());
 		repo.save(new User("pepito@hotmail.com","123456","pepipepito"));
 		repo.save(new User("juan@hotmail.com","123654","juanijuanito",false,true));
-		repo.save(new User("juan@hotmail.com","123654","juanijuanito",false,true,null,null));
+		repo.save(new User("juan@hotmail.com","123654","juanijuanito",false,false,null,null));
 		repo.saveAndFlush(new User());
-		/*List<User> pepipepito = repo.findByUsername("pepipepito");
-		for (User p : pepipepito) {
-			System.out.println(p);
-		}*/
+		
+		
+		List<User> pepipepito = repo.findByAdmin(false);
+		
+			System.out.println(pepipepito);
+		
 	}
 }
