@@ -1,11 +1,15 @@
 package es.codeurjc.NoMoreSpace;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -13,7 +17,7 @@ import javax.persistence.OneToOne;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long user_id;
 	
 	private String mail;
@@ -25,8 +29,8 @@ public class User {
 	
 	@OneToOne
 	private Pool pool;
-	@OneToMany
-	private List<Panel> panel;
+	@OneToMany( fetch = FetchType.EAGER, mappedBy = "panel", cascade = CascadeType.ALL)
+	private List<Panel> panel = new ArrayList<Panel>();
 	
 	protected User() {}
 	
@@ -53,7 +57,7 @@ public class User {
 	}
 
 	public User(String mail, String password, String username, boolean bloqueado, boolean admin, Pool pool,
-			List<Panel> panel) {
+			Panel p) {
 		super();
 		this.mail = mail;
 		this.password = password;
@@ -61,7 +65,7 @@ public class User {
 		this.bloqueado = bloqueado;
 		this.admin = admin;
 		this.pool = pool;
-		this.panel = panel;
+		panel.add(p);
 	}
 
 	public void setMail(String mail) {
@@ -98,6 +102,13 @@ public class User {
 
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
+	}
+	public List<Panel> getPanel() {
+		return panel;
+	}
+	public void setPanel(String name) {
+		Panel p = new Panel(name);
+		this.panel.add(p);
 	}
 
 	@Override
