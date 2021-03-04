@@ -1,33 +1,37 @@
 {{>head}}
 <section>
-		<article class="firstSection">
-			<h3>My files upload</h3>
-			<ul>
-				<li>Mi cuota: {{userSizePoolMax}}</li>
-				<li>Espacio ocupado: {{userSizePool}}</li>
-				<li>Archivos subidos: {{userSizePoolFiles}}</li>
-				<li>Porcentaje de espacio ocupado: {{userSizePoolPercent}}%</li>
-			</ul>
-		</article>
-		<article class="firstSection">
-			<h3>My user settings</h3>
-			<p>My actual email: {{userMail}}</p>
-			<form>
-				<input type="email" name="newMail" placeholder="name@domain.com"/>
-				<br/>
-				<input type="submit" name="changeMail" value="Change my email"/>
-			</form>
-			<p>Change my password:</p>
-			<form>
-				<input type="password" name="passwd" placeholder="New password"/>
-				<br/>
-				<input type="password" name="passwd2" placeholder="Repeat the new password"/>
-				<br/>
-				<input type="submit" name="changePassword" value="Change my password"/>
-			</form>
-		</article>
+	<h1>{{userName}}</h1>
+	<article class="firstSection">
+		<h3>My files upload</h3>
+		<ul>
+			<li>Mi cuota: {{userSizePoolMax}}</li>
+			<li>Espacio ocupado: {{userSizePool}}</li>
+			<li>Archivos subidos: {{userSizePoolFiles}}</li>
+			<li>Porcentaje de espacio ocupado: {{userSizePoolPercent}}%</li>
+		</ul>
+	</article>
+	<article class="firstSection">
+		<h3>My user settings</h3>
+		<p>My actual email: {{userMail}}</p>
+		{{#msgPassword}}
+			<p class="error">{{msgPassword}}</p>
+		{{/msgPassword}}
+		<form action="/myuser/mail" method="post">
+			<input type="email" name="newMail" placeholder="name@domain.com" required/>
+			<br/>
+			<input type="submit" name="changeMail" value="Change my email"/>
+		</form>
+		<p>Change my password:</p>
+		{{#msgMail}}
+			<p class="error">{{msgMail}}</p>
+		{{/msgMail}}
+		<form name="chagePassword" action="/myuser/password" method="post" onsubmit="return samePasswd('chagePassword')">
+			<input type="password" name="passwd" placeholder="New password" required/>
+			<br/>
+			<input type="password" name="passwd2" placeholder="Repeat the new password" required/>
+			<br/>
+			<input type="submit" name="changePassword" value="Change my password"/>
+		</form>
+	</article>
 </section>
-<aside>
-	<p>Información sobre un elemento</p>
-</aside>
 {{>foot}}

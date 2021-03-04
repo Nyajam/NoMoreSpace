@@ -3,20 +3,20 @@
 	<h2> {{titlePage}} </h2>
 	{{#expulse}}
 		<p class="error">{{msgError}}</p>
-		<a href="login">Reintentar login</a>
+		<a href="/login">Reintentar login</a>
 	{{/expulse}}
 	{{^expulse}}
 		{{#access}}
 			<p>Acceso concedido!</p>
-			<a href="home">Go to my home</a>
+			<a href="/home">Go to my home</a>
 		{{/access}}
 		{{^access}}
 			<p>Login in your account</p>
-			<form action="login" method='post'>
-				<input type="text" name="user" placeholder="Username"/>
+			<form action="/login" method='post'>
+				<input type="text" name="user" placeholder="Username" required/>
 					<br/>
 					<br/>
-				<input type="password" name="passwd" placeholder="Password"/>
+				<input type="password" name="passwd" placeholder="Password" required/>
 					<br/>
 					<br/>
 				<input type="submit" name="login" value="login"/>
