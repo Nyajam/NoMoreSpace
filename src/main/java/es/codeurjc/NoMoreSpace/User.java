@@ -18,7 +18,7 @@ public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
-	private long user_id;
+	private long id;
 	
 	private String mail;
 	private String password;
@@ -50,12 +50,6 @@ public class User {
 		this.admin = admin;
 	}
 	
-	
-	
-	public String getMail() {
-		return mail;
-	}
-
 	public User(String mail, String password, String username, boolean bloqueado, boolean admin, Pool pool,
 			Panel p) {
 		super();
@@ -65,9 +59,22 @@ public class User {
 		this.bloqueado = bloqueado;
 		this.admin = admin;
 		this.pool = pool;
-		panel.add(p);
+		this.panel.add(p);
+	}
+	
+	
+	public long getUserId() {
+		return id;
 	}
 
+	public void setUser_id(long user_id) {
+		this.id = user_id;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+	
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
@@ -113,8 +120,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [user_id=" + user_id + ", mail=" + mail + ", password=" + password + ", username=" + username
-				+ ", bloqueado=" + bloqueado + ", admin=" + admin + ", pool=" + pool + "]";
+		return "User [user_id=" + id + ", mail=" + mail + ", password=" + password + ", username=" + username
+				+ ", bloqueado=" + bloqueado + ", admin=" + admin + ", panel=" + panel + ", pool=" + pool + "]";
 	}
 
 
