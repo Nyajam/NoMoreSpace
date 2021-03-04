@@ -67,8 +67,8 @@ public class User {
 		return id;
 	}
 
-	public void setUser_id(long user_id) {
-		this.id = user_id;
+	public void setUseId(long id) {
+		this.id = id;
 	}
 
 	public String getMail() {
