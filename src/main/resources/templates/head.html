@@ -27,6 +27,16 @@
 			}
 			return true;
 		}
+		function sendDialogQuest(idForm, text)
+		{
+			var data=prompt(text);
+			if(data!=null)
+			{
+				var tmp=document.getElementById(idForm);
+				tmp.children[0].value=text;
+				tmp.submit();
+			}
+		}
 	</script>
 	</head>  
 	<body>
@@ -40,36 +50,39 @@
 				</div>
 				<div id=navR>
 					{{#index}}
-						<a class="navBT" href="newuser" {{#newuser}} style="background-color: gray;" {{/newuser}} >
+					<a class="navBT" href="/" {{#Index}} style="background-color: gray;" {{/Index}} >
+							<i class="material-icons">home</i>
+						</a>
+						<a class="navBT" href="/newuser" {{#newuser}} style="background-color: gray;" {{/newuser}} >
 							<i class="material-icons">person_add</i>
 						</a>
-						<a class="navBT" href="login" {{#login}} style="background-color: gray;" {{/login}} >
+						<a class="navBT" href="/login" {{#login}} style="background-color: gray;" {{/login}} >
 							<i class="material-icons">input</i>
 						</a>
 					{{/index}}
 					{{^index}}
 						{{#home}}
-							<a class="navBT" href="home">
+							<a class="navBT" href="#" onclick="sendDialogQuest('newPanel','Enter the name of panel')">
 								<i class="material-icons">create_new_folder</i>
 							</a>
 							<a class="navBT" href="#" onclick="desplegar('uploadfile')">
 								<i class="material-icons">cloud_upload</i>
 							</a>
 						{{/home}}
-						<a class="navBT" href="home" {{#home}} style="background-color: gray;" {{/home}} >
+						<a class="navBT" href="/home" {{#home}} style="background-color: gray;" {{/home}} >
 							<i class="material-icons">folder_open</i>
 						</a>
-						<a class="navBT" href="myuser" {{#myuser}} style="background-color: gray;" {{/myuser}} >
+						<a class="navBT" href="/myuser" {{#myuser}} style="background-color: gray;" {{/myuser}} >
 							<i class="material-icons">settings</i>
 						</a>
 					{{/index}}
 					{{#admin}}
-						<a class="navBT" href="adm" {{#adm}} style="background-color: gray;" {{/adm}} >
+						<a class="navBT" href="/adm" {{#adm}} style="background-color: gray;" {{/adm}} >
 							<i class="material-icons">supervisor_account</i>
 						</a>
 					{{/admin}}
 					{{^index}}
-						<a class="navBT" href="login" {{#login}} style="background-color: gray;" {{/login}} >
+						<a class="navBT" href="/logout" {{#login}} style="background-color: gray;" {{/login}} >
 							<i class="material-icons">close</i>
 						</a>
 					{{/index}}
