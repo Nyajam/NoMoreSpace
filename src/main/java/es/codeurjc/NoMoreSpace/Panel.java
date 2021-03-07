@@ -90,6 +90,14 @@ public class Panel {
 		file.setPanel(null);
 	}
 
+	public List<Panel> getPanel() {
+		return panel;
+	}
+
+	public void setPanel(List<Panel> panel) {
+		this.panel = panel;
+	}
+
 	@Override
 	public String toString() {
 		return "Panel [id=" + id + ", name=" + name + ", user=" + user.getId() + ", " + user.getUsername() + ", panel=" + panel + ", file=" + file + "]";
