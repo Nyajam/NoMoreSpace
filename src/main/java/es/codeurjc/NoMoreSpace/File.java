@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -18,7 +19,7 @@ public class File {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long file_id;
+	private long id;
 	
 	private String filename;
 	private boolean compartido;
@@ -26,9 +27,17 @@ public class File {
 	@ManyToMany
 	private List<Block> blocks;
 	@ManyToOne
-	private Panel panel;
-	@ManyToOne
 	private Pool pool;
+	@ManyToOne 
+	private Panel panel;
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 	
 	protected File() {}
 
@@ -54,10 +63,46 @@ public class File {
 		this.compartido = compartido;
 	}
 
-	@Override
-	public String toString() {
-		return "File [file_id=" + file_id + ", filename=" + filename + ", compartido=" + compartido + "]";
+	public List<Block> getBlocks() {
+		return blocks;
+	}
+
+	public void setBlocks(List<Block> blocks) {
+		this.blocks = blocks;
 	}
 	
+	public void addBlock(Block block) {
+		getBlocks().add(block);
+		block.addFile(this);
+	}
+	
+	public void removeBlock(Block block) {
+		getBlocks().remove(block);
+		if (block.getFiles().contains(this)) {
+			block.removeFile(this);
+		}
+	}
+
+	public Panel getPanel() {
+		return panel;
+	}
+
+	public void setPanel(Panel panel) {
+		this.panel = panel;
+	}
+
+	public Pool getPool() {
+		return pool;
+	}
+
+	public void setPool(Pool pool) {
+		this.pool = pool;
+	}
+	
+	@Override
+	public String toString() {
+		return "File [id=" + id + ", filename=" + filename + ", compartido=" + compartido + ", blocks=" + blocks
+				+ ", panel=" + panel + ", pool=" + pool + "]";
+	}
 	
 }

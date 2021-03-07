@@ -65,7 +65,7 @@ public class ControladorTest
 				{
 					if(chkSession(sesion)!=null)
 						sesion.invalidate();
-					sesion.setAttribute("token", usuario.get(0).getUserId());
+					sesion.setAttribute("token", usuario.get(0).getId());
 					sesion.setMaxInactiveInterval(60*TIEMPO_SESION_MINUTOS);
 					return 0;
 				}

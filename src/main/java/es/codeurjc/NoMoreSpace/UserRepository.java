@@ -11,5 +11,5 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	List<User> findByMail(String mail);
 	List<User> findByBloqueado(Boolean bloqueado);
 	List<User> findByAdmin(Boolean admin);
-	void save(Panel panel);
+
 }

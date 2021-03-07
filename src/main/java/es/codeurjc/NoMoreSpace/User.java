@@ -17,60 +17,58 @@ import javax.persistence.OneToOne;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+	private String username;
 	private String mail;
 	private String password;
-	private String username;
 	private boolean bloqueado; //0 No bloqueado 1 Si bloqueado
 	private boolean admin; //0 usuario normal, 1 administrador
 	
-	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Pool pool;
-	@OneToMany( fetch = FetchType.EAGER, mappedBy = "panel", cascade = CascadeType.ALL)
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Panel> panel = new ArrayList<Panel>();
 	
-	protected User() {}
-	
-	public User(String mail, String password, String username) {
-		this.mail = mail;
-		this.password = password;
-		this.username = username;
-		this.bloqueado = false;
-		this.admin = false;
-	}
-	
-	public User(String mail, String password, String username, boolean bloqueado, boolean admin) {
-		this.mail = mail;
-		this.password = password;
-		this.username = username;
-		this.bloqueado = bloqueado;
-		this.admin = admin;
-	}
-	
-	public User(String mail, String password, String username, boolean bloqueado, boolean admin, Pool pool,
-			Panel p) {
-		super();
-		this.mail = mail;
-		this.password = password;
-		this.username = username;
-		this.bloqueado = bloqueado;
-		this.admin = admin;
-		this.pool = pool;
-		this.panel.add(p);
-	}
-	
-	
-	public long getUserId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setUseId(long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
+	protected User() {}
+	
+	public User(String username, String mail, String password) {
+		
+		this.username = username;
+		this.mail = mail;
+		this.password = password;
+		this.bloqueado = false;
+		this.admin = false;
+		this.panel.add(new Panel(this,"Raiz"));
+	}
+	
+	public User(String username, String mail, String password, boolean bloqueado, boolean admin) {
+		
+		this.username = username;
+		this.mail = mail;
+		this.password = password;
+		this.bloqueado = bloqueado;
+		this.admin = admin;
+		this.panel.add(new Panel(this, "Raiz"));
+	}
+
+	public String getUsername() {
+		return username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
 	public String getMail() {
 		return mail;
 	}
@@ -85,14 +83,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public boolean isBloqueado() {
@@ -110,21 +100,36 @@ public class User {
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
-	public List<Panel> getPanel() {
-		return panel;
-	}
-	public void setPanel(String name) {
-		Panel p = new Panel(name);
-		this.panel.add(p);
+	
+	public Pool getPool() {
+		return pool;
 	}
 
+	public void setPool(Pool pool) {
+		this.pool = pool;
+	}
+	
+	public List<Panel> getPanel() { //Devuelve una lñista de panels con los panesl del usuario
+		return this.panel;
+	}
+	public void setPanel(List<Panel> panel) { //Asigna una lista de Panels al usuario
+		this.panel = panel;
+	}
+
+	public void addPanel(Panel panel) { //Introduce un solo panel en la lista de panels del usuario
+		getPanel().add(panel);
+		panel.setUser(this);
+	}
+	
+	public void removePanel(Panel panel) { //Borra de la lista de panels del usuario un panel específico
+		getPanel().remove(panel);
+		panel.setUser(null);
+	}
+	
 	@Override
 	public String toString() {
-		return "User [user_id=" + id + ", mail=" + mail + ", password=" + password + ", username=" + username
+		return "User [id=" + id + ", mail=" + mail + ", password=" + password + ", username=" + username
 				+ ", bloqueado=" + bloqueado + ", admin=" + admin + ", panel=" + panel + ", pool=" + pool + "]";
 	}
-
-
-
 
 }
