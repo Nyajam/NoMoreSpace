@@ -2,7 +2,6 @@ package es.codeurjc.NoMoreSpace;
 
 public class FileTest
 {
-
 	private String name;
 	private int id;
 	private int size;

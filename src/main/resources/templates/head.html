@@ -32,6 +32,11 @@
 			var data=prompt(text);
 			if(data!=null)
 			{
+				if(data.search('/')>=0)
+				{
+					alert('error, caracter no valido -> /');
+					return;
+				}
 				var tmp=document.getElementById(idForm);
 				tmp.children[0].value=text;
 				tmp.submit();
