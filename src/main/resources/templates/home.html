@@ -18,14 +18,14 @@
 		<div id="listPanels" >
 			{{#panels}}
 				<form action="/home" method="post">
+					<input type="hidden" name="actualPanel" value="{{name}}"/>
 					<input type="hidden" name="goToPanel" value="{{name}}"/>
-					<input type="hidden" name="actualPanel" value="{{panel}}"/>
 					<input type="submit" value="{{name}}"/>
 				</form>
 			{{/panels}}
 		</div>
 	</article>
-	<form action="/home" method="post">
+	<form action="/home/downfiles" method="post">
 		<article class="firstSection">
 			<h3>My files
 			<a href="#" onclick="desplegar('listFiles')">
@@ -45,22 +45,7 @@
 </section>
 <aside>
 	<p>Panel actual:</p>
-	<p>{{panel}}</p>
-	<form id="newPanel" action="/home/newpanel" method="post">
-		<input type="hidden" name="nameNewPanel" value=""/>
-		<input type="hidden" name="actualPanel" value="{{panel}}"/>
-	</form>
-	<form action="/home" method="post">
-		<input type="hidden" name="sharePanel" value="id_panel"/>
-		<input type="submit" value="compartir panel"/>
-	</form>
-	<p>Compartido: si</p>
-	<p>Enlace: <a href="url">url</a></p>
-	<p>Usuarios con quien lo compartes:</p>
-	<ul>
-		<li>user1</li>
-		<li>user2</li>
-		<li>user3</li>
-	</ul>
+	<p>{{actualPanel}}</p>
+	
 </aside>
 {{>foot}}

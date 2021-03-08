@@ -42,6 +42,32 @@
 				tmp.submit();
 			}
 		}
+		function chargeAdminUser(user, form)
+		{
+			var datos = document.getElementById(user);
+			var destino = document.getElementById(form);
+			for(var i=1;i<8;i++)
+			{
+				if(i%2==0)
+					i++;
+				destino.childNodes[i].innerHTML=datos.childNodes[i].innerHTML;
+			}
+			
+			//destino.childNodes[9].firstChild.checked=(datos.childNodes[5].innerHTML.split(' ')[1]=='true');
+			//destino.childNodes[11].firstChild.checked=(datos.childNodes[7].innerHTML.split(' ')[1]=='true');
+			
+			if(datos.childNodes[5].innerHTML.split(' ')[1]=='true')
+				destino.childNodes[9].childNodes[1].value="Y";
+			else
+				destino.childNodes[9].childNodes[1].value="N"
+			if(datos.childNodes[7].innerHTML.split(' ')[1]=='true')
+				destino.childNodes[11].childNodes[1].value="Y";
+			else
+				destino.childNodes[11].childNodes[1].value="N"
+			
+			destino.childNodes[21].disabled=false;
+			destino.childNodes[23].value=user;
+		}
 	</script>
 	</head>  
 	<body>

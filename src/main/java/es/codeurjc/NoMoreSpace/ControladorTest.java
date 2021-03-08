@@ -21,6 +21,7 @@ public class ControladorTest
 {
 	@Autowired
 	private UserRepository repo;
+	private PanelRepository repoP;
 	
 	private final int TIEMPO_SESION_MINUTOS=20;
 	
@@ -46,6 +47,13 @@ public class ControladorTest
 	private String noSession(Model model, HttpSession sesion)
 	{
 		model.addAttribute("URL","/logout");
+		return "hook";
+	}
+	
+	//Retornar el retorno de esta funcion en caso de usuario no autorizado
+	private String noAuth(Model model, HttpSession sesion)
+	{
+		model.addAttribute("URL","/home");
 		return "hook";
 	}
 	
@@ -88,31 +96,42 @@ public class ControladorTest
 	//Retorna el panel del path especificado de un usuario <-- Cambiar a Panel
 	private Panel getPanelByPath(User usuario, String path)
 	{
-		//Panel workdir;
-		//workdir=usuario.getPanel().get(0);
-		PanelTest workdir;
-		workdir=new PanelTest("/");
-		//^---------------------------------^
+		Panel workdir;
+		workdir=usuario.getPanel().get(0);
 		String[] dir;
 		dir=path.split("/");
 		for(int i=0;i<dir.length;i++)
 		{
-			for(int j=0;j<workdir.getPanels().size();j++)
+			for(int j=0;j<workdir.getPanel().size();j++)
 			{
 				workdir.getName().equals(dir[i]);
 				//Si el workdir es el panel
-				if(workdir.getPanels().get(j).getName().equals(dir[i]))
+				if(workdir.getPanel().get(j).getName().equals(dir[i]))
 				{
 					//El encontrado pasa a ser el nuevo workdir y sale del bucle de recorrido del panel
-					workdir=workdir.getPanels().get(j);
+					workdir=workdir.getPanel().get(j);
 					break;
 				}
 			}
 		}
-		if(workdir.getName().equals(path))
-			return new Panel(path);
+		if(workdir.getName().equals(dir[dir.length-1]))
+			return workdir;
 		else
 			return null;
+	}
+	
+	//Retorna el peso en bytes de los files del usuario
+	private int sizeOfPool(User usuario)
+	{
+		int size=0;
+		//for(int i=0;i<usuario.getPool().getFile().size();i++)
+		//{
+		//	size=usuario.getPool().getFile().get(i);
+		//}
+		if(usuario.getPool()==null)
+			return 0;
+		size=usuario.getPool().getFile().size();
+		return size;
 	}
 	
 	//
@@ -122,20 +141,20 @@ public class ControladorTest
 	//Parte comun de gestion de usuario
 	private String myuserESTC(Model model, Optional <User> usuario)
 	{
-		int size=0;
-		LinkedList<FileTest> filesUser=new LinkedList();
-		for(int i=0;i<20;i++)
-		{
-			filesUser.add(new FileTest("file_"+i,i));
-			size=size+i*1000;
-		}
 		model.addAttribute("userName",usuario.get().getUsername());
-		model.addAttribute("filesUser",filesUser);
 		
 		model.addAttribute("userSizePoolMax","10GB");
-		model.addAttribute("userSizePool",size/1024+"MB");
-		model.addAttribute("userSizePoolFiles",filesUser.size());
-		model.addAttribute("userSizePoolPercent",(size/1024.0)/10240.0);
+		model.addAttribute("userSizePool",sizeOfPool(usuario.get())+"B");
+		if(usuario.get().getPool()!=null)
+		{
+			if(usuario.get().getPool().getFile()!=null)
+				model.addAttribute("userSizePoolFiles",usuario.get().getPool().getFile().size());
+			else
+				model.addAttribute("userSizePoolFiles",0);
+		}
+		else
+			model.addAttribute("userSizePoolFiles",0);
+		model.addAttribute("userSizePoolPercent",sizeOfPool(usuario.get())/10240.0);
 		model.addAttribute("userMail",usuario.get().getMail());
 		
 		model.addAttribute("panelCSS",false);
@@ -149,21 +168,31 @@ public class ControladorTest
 	//Parte comun del home del usuario
 	private String homeESTC(Model model, Optional <User> usuario)
 	{
-		List<FileTest> filesUser=new LinkedList();
-		for(int i=0;i<5;i++)
-			filesUser.add(new FileTest("panel_"+i,i));
-		
-		
 		model.addAttribute("userName",usuario.get().getUsername());
-		//if(usuario.getPanel().get(0).getFile()!=null)
-		//	model.addAttribute("filesUser",usuario.getPanel().get(0).getFile());
 		model.addAttribute("panelCSS",false);
 		model.addAttribute("admin",usuario.get().isAdmin()); //SI EL USUARIO ES ADMINISTRADOR
 		model.addAttribute("titleApp","NoMoreSpacePlease!");
 		model.addAttribute("titlePage","Home");
 		model.addAttribute("home",true);
-		model.addAttribute("panels",filesUser);
+		if(usuario.get().getPanel().get(0).getPanel().size()>0)
+			model.addAttribute("panels",usuario.get().getPanel().get(0));
 		return "home";
+	}
+	
+	//Parte comun del adm
+	private String admESTC(Model model, Optional <User> usuario)
+	{
+		model.addAttribute("userName","test");
+		model.addAttribute("panelCSS",false);
+		model.addAttribute("adm",true);
+		model.addAttribute("admin",usuario.get().isAdmin()); //SI EL USUARIO ES ADMINISTRADOR
+		model.addAttribute("titleApp","NoMoreSpacePlease!");
+		model.addAttribute("titlePage","Administration");
+		List<User> userList=repo.findAll();
+		model.addAttribute("userList",userList);
+		model.addAttribute("systemUsers",repo.findAll().size());
+		model.addAttribute("systemUsersAdm",repo.findByAdmin(true).size());
+		return "administration";
 	}
 	
 	//
@@ -304,8 +333,7 @@ public class ControladorTest
 			model.addAttribute("msg","Username is use");
 			return "newuser";
 		}
-		User nuevo=new User(mail,passwd,user,false,true);
-		nuevo.getPanel().add(new Panel("/"));
+		User nuevo=new User(user,mail,passwd,false,true);
 		repo.save(nuevo);
 		if(login(user,passwd,sesion)!=0)
 			model.addAttribute("msg","Usuario creado con exito, pero ha habido un problema de login");
@@ -324,7 +352,7 @@ public class ControladorTest
 		{
 			return noSession(model, sesion);
 		}
-		model.addAttribute("panel","home");//usuario.get().getPanel().get(0).getName());
+		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());//usuario.get().getPanel().get(0).getName());
 		return homeESTC(model,usuario);
 	}
 	
@@ -338,13 +366,11 @@ public class ControladorTest
 		{
 			return noSession(model, sesion);
 		}
+		model.addAttribute("actualPanel",actualPanel);
 		Panel workdir;
 		workdir=getPanelByPath(usuario.get(),actualPanel);
-		if(workdir==null)
-			model.addAttribute("panel",actualPanel);
-		else
-			model.addAttribute("panel",workdir.getName());
-		//Crear un panel en la lista del workdir
+		usuario.get().addPanel(workdir);
+		repo.save(usuario.get());
 		
 		return homeESTC(model,usuario);
 	}
@@ -453,32 +479,43 @@ public class ControladorTest
 	@GetMapping("/adm")
 	public String admPage(Model model, HttpSession sesion)
 	{
-		/*if(chkSession(sesion)==null)
+		Optional <User> usuario;
+		usuario=chkSession(sesion);
+		if(usuario==null)
 		{
 			return noSession(model, sesion);
-		}*/
-		List<FileTest> filesUser=new LinkedList();
-		for(int i=0;i<20;i++)
-			filesUser.add(new FileTest("file_"+i,i));
-		model.addAttribute("userName","test");
-		model.addAttribute("filesUser",filesUser);
-		model.addAttribute("panelCSS",false);
-		model.addAttribute("adm",true);
-		model.addAttribute("admin",true); //SI EL USUARIO ES ADMINISTRADOR
-		model.addAttribute("titleApp","NoMoreSpacePlease!");
-		model.addAttribute("titlePage","Administration");
-		List<User> userList=repo.findAll();
-		//---------------------------BORRAR PARA ENTREGA-V
-		do
-		{
-			List<User> tmp=repo.findByUsername(null);
-			if(tmp.isEmpty())
-				break;
-			repo.delete(tmp.get(0));
 		}
-		while(true);
-		//-----------------------------------------------^
-		model.addAttribute("userList",userList);
-		return "administration";
+		if(!usuario.get().isAdmin())
+			return noAuth(model,sesion);
+		return admESTC(model,usuario);
+	}
+	
+	//Pagina de administracion, ajustes de usuarios - Privada
+	@RequestMapping("/adm")
+	public String admPageProcessUsers(Model model, HttpSession sesion, @RequestParam String passwd, @RequestParam String passwd2, @RequestParam String lock, @RequestParam String adm, @RequestParam String mail, @RequestParam String userName)
+	{
+		Optional <User> usuario;
+		usuario=chkSession(sesion);
+		if(usuario==null)
+		{
+			return noSession(model, sesion);
+		}
+		if(!usuario.get().isAdmin())
+			return noAuth(model,sesion);
+		if(repo.findByUsername(userName).isEmpty())
+			model.addAttribute("msg","Error, usuario no encontrado");
+		else
+		{
+			User victima;
+			victima=repo.findByUsername(userName).get(0);
+			if(!mail.equals(""))
+				victima.setMail(mail);
+			if(passwd.equals(passwd2)&&!passwd.equals(""))
+				victima.setPassword(passwd);
+			victima.setBloqueado(lock.equals("Y"));
+			victima.setAdmin(adm.equals("Y"));
+			repo.save(victima);
+		}
+		return admESTC(model,usuario);
 	}
 }

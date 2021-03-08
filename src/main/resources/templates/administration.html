@@ -2,13 +2,8 @@
 <section>
 	<article class="firstSection">
 		<h3>Valores del sistema</h3>
-		<p>Numero de usuarios: 20</p>
-		<p>Numero de usuarios administradores: 20</p>
-		<p>Numero de ficheros: 2000</p>
-		<p>Espacio total ocupado: 15GB</p>
-		<p>Tasa media de archivos por usuario: 100</p>
-		<p>Tasa media de espacio ocupado por usuario: 5.26GB</p>
-		<p>Tasa media de espacio ocupado por archivo: 225MB</p>
+		<p>Numero de usuarios: {{systemUsers}}</p>
+		<p>Numero de usuarios administradores: {{systemUsersAdm}}</p>
 	</article>
 	<hr/>
 	<article>
@@ -23,7 +18,7 @@
 				<p>Numero de ficheros: </p>
 				<p>Espacio ocupado: </p>
 				<p>Espacio medio por fichero: </p>
-				<a href="#" onclick="desplegar('uploadfile')" style="color: black; font-size: 48px;">
+				<a href="#" onclick="chargeAdminUser('{{username}}','userEditForm')" style="color: black; font-size: 48px;">
 					<i class="material-icons">more_horiz</i>
 				</a>
 			</div>
@@ -32,22 +27,31 @@
 </section>
 <aside>
 	<p>Users settings:</p>
-	<p></p>
-	<form id="newPanel" action="/home/newpanel" method="post">
-		<input type="hidden" name="nameNewPanel" value=""/>
-		<input type="hidden" name="actualPanel" value=""/>
+	<form id="userEditForm" action="/adm" method="post" onsubmit="return samePasswd('userEditForm')">
+		<p>Nombre: </p>
+		<p>Mail: </p>
+		<p>Lock: </p>
+		<p>Administrador: </p>
+		<p>
+			Lock
+			<select name="lock">
+				<option value="Y">Yes</option>
+				<option value="N">No</option>
+			</select>
+		</p>
+		<p>
+			Administrator
+			<select name="adm">
+				<option value="Y">Yes</option>
+				<option value="N">No</option>
+			</select>
+		</p>
+		<input type="password" name="passwd" placeholder="New password"/>
+		<input type="password" name="passwd2" placeholder="New password again"/>
+		<input type="email" name="mail" placeholder="New mail: name@domain.com"/>
+		<br/>
+		<input type="submit" value="Apply" disabled=""/>
+		<input type="hidden" name="userName" value=""/>
 	</form>
-	<form action="/home" method="post">
-		<input type="hidden" name="sharePanel" value="id_panel"/>
-		<input type="submit" value="compartir panel"/>
-	</form>
-	<p>Compartido: si</p>
-	<p>Enlace: <a href="url">url</a></p>
-	<p>Usuarios con quien lo compartes:</p>
-	<ul>
-		<li>user1</li>
-		<li>user2</li>
-		<li>user3</li>
-	</ul>
 </aside>
 {{>foot}}
