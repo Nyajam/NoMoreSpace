@@ -15,9 +15,11 @@ Este proyecto busca la creación de una web de almacenamiento de ficheros de man
 - El servicio interno realiza la conexión con los distintos proveedores de almacenamiento que tienen esos bloques y transfiere los archivos.
 
 # Documentación fase 2
--Enlace a la documentación de las vistas/navegación: https://drive.google.com/file/d/11NsNpEN8ks14z5lCZdXWOMwQ8ZS81uo-/view?usp=sharing
--Enlace al ER: https://drive.google.com/file/d/1tjbNDfGzgjJFue4d46mj1-iMvP5z9Z-s/view?usp=sharing
--Enlace al UML: https://drive.google.com/file/d/14bYvo8Qj4CmKj-Qrtxrs-vwaUmZhEIrH/view?usp=sharing
+Enlace a la documentación de las vistas/navegación: https://drive.google.com/file/d/11NsNpEN8ks14z5lCZdXWOMwQ8ZS81uo-/view?usp=sharing
+
+Enlace al ER: https://drive.google.com/file/d/1tjbNDfGzgjJFue4d46mj1-iMvP5z9Z-s/view?usp=sharing
+
+Enlace al UML: https://drive.google.com/file/d/14bYvo8Qj4CmKj-Qrtxrs-vwaUmZhEIrH/view?usp=sharing
 
 # Autores/Integrantes del proyecto
 - Ildefonso Macarro Pueyo i.macarro.2016@alumnos.urjc.es
