@@ -1,0 +1,64 @@
+function desplegar(elemento)
+{
+	var tmp=document.getElementById(elemento);
+	if(tmp.style.display=="none")
+		tmp.style.display="block";
+	else
+		tmp.style.display="none";
+}
+function samePasswd(form)
+{
+	if (document.forms[form]["passwd"].value != document.forms[form]["passwd2"].value)
+	{
+		alert("The password are not same!");
+		return false;
+	}
+	return true;
+}
+function sendDialogQuest(idForm, text)
+{
+	var data=prompt(text);
+	if(data!=null)
+	{
+		if(data.search('/')>=0)
+		{
+			alert('error, caracter no valido -> /');
+			return;
+		}
+		var tmp=document.getElementById(idForm);
+		tmp.children[0].value=data;
+		tmp.submit();
+	}
+}
+function chargeAdminUser(user, form)
+{
+	var datos = document.getElementById(user);
+	var destino = document.getElementById(form);
+	for(var i=1;i<8;i++)
+	{
+		if(i%2==0)
+			i++;
+		destino.childNodes[i].innerHTML=datos.childNodes[i].innerHTML;
+	}
+	
+	//destino.childNodes[9].firstChild.checked=(datos.childNodes[5].innerHTML.split(' ')[1]=='true');
+	//destino.childNodes[11].firstChild.checked=(datos.childNodes[7].innerHTML.split(' ')[1]=='true');
+	
+	if(datos.childNodes[5].innerHTML.split(' ')[1]=='true')
+		destino.childNodes[9].childNodes[1].value="Y";
+	else
+		destino.childNodes[9].childNodes[1].value="N"
+	if(datos.childNodes[7].innerHTML.split(' ')[1]=='true')
+		destino.childNodes[11].childNodes[1].value="Y";
+	else
+		destino.childNodes[11].childNodes[1].value="N"
+	
+	destino.childNodes[21].disabled=false;
+	destino.childNodes[23].value=user;
+}
+function formToFolder(idForm)
+{
+	var tmp=document.getElementById(idForm);
+	tmp.childNodes[1].value=document.getElementById('actualPanel').innerText;
+	//tmp.submit();
+}

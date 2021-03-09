@@ -1,5 +1,6 @@
 package es.codeurjc.NoMoreSpace;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,17 +14,19 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-public class ControladorTest
+public class Controlador
 {
 	@Autowired
 	private UserRepository repo;
-	private PanelRepository repoP;
 	
 	private final int TIEMPO_SESION_MINUTOS=20;
+	
 	
 	//
 	//METODOS COMUNES 
@@ -104,7 +107,7 @@ public class ControladorTest
 		{
 			for(int j=0;j<workdir.getPanel().size();j++)
 			{
-				workdir.getName().equals(dir[i]);
+				//workdir.getName().equals(dir[i]);
 				//Si el workdir es el panel
 				if(workdir.getPanel().get(j).getName().equals(dir[i]))
 				{
@@ -142,7 +145,6 @@ public class ControladorTest
 	private String myuserESTC(Model model, Optional <User> usuario)
 	{
 		model.addAttribute("userName",usuario.get().getUsername());
-		
 		model.addAttribute("userSizePoolMax","10GB");
 		model.addAttribute("userSizePool",sizeOfPool(usuario.get())+"B");
 		if(usuario.get().getPool()!=null)
@@ -174,8 +176,6 @@ public class ControladorTest
 		model.addAttribute("titleApp","NoMoreSpacePlease!");
 		model.addAttribute("titlePage","Home");
 		model.addAttribute("home",true);
-		if(usuario.get().getPanel().get(0).getPanel().size()>0)
-			model.addAttribute("panels",usuario.get().getPanel().get(0));
 		return "home";
 	}
 	
@@ -333,7 +333,7 @@ public class ControladorTest
 			model.addAttribute("msg","Username is use");
 			return "newuser";
 		}
-		User nuevo=new User(user,mail,passwd,false,true);
+		User nuevo=new User(user,mail,passwd);
 		repo.save(nuevo);
 		if(login(user,passwd,sesion)!=0)
 			model.addAttribute("msg","Usuario creado con exito, pero ha habido un problema de login");
@@ -352,7 +352,27 @@ public class ControladorTest
 		{
 			return noSession(model, sesion);
 		}
-		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());//usuario.get().getPanel().get(0).getName());
+		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
+		model.addAttribute("panels",usuario.get().getPanel());
+		return homeESTC(model,usuario);
+	}
+	
+	//Pagina del home del usuario - Privada
+	@RequestMapping("/home")
+	public String homePageProcess(Model model, HttpSession sesion, @RequestParam String actualPanel, @RequestParam String goToPanel)
+	{
+		Optional <User> usuario;
+		usuario=chkSession(sesion);
+		if(usuario==null)
+		{
+			return noSession(model, sesion);
+		}
+		//model.addAttribute("actualPanel",actualPanel+"/"+goToPanel);
+		//model.addAttribute("panels", getPanelByPath(usuario.get(),actualPanel+"/"+goToPanel).getPanel() );
+		
+		model.addAttribute("actualPanel",goToPanel);
+		model.addAttribute("panels",usuario.get().getPanel());
+		
 		return homeESTC(model,usuario);
 	}
 	
@@ -367,17 +387,28 @@ public class ControladorTest
 			return noSession(model, sesion);
 		}
 		model.addAttribute("actualPanel",actualPanel);
-		Panel workdir;
+		Panel workdir, nuevo;
 		workdir=getPanelByPath(usuario.get(),actualPanel);
-		usuario.get().addPanel(workdir);
-		repo.save(usuario.get());
-		
+		for(int i=0;i<workdir.getPanel().size();i++)
+			if(workdir.getPanel().get(i).getName().equals(nameNewPanel))
+			{
+				model.addAttribute("panels",usuario.get().getPanel());
+				return homeESTC(model,usuario);
+			}
+		if(workdir!=null)
+		{
+			nuevo=new Panel(usuario.get(),nameNewPanel);
+			workdir.getPanel().add(nuevo);
+			//usuario.get().addPanel(workdir);
+			repo.save(usuario.get());
+		}
+		model.addAttribute("panels",usuario.get().getPanel());
 		return homeESTC(model,usuario);
 	}
 	
-	//Pagina del home del usuario, compartir panel - Privada
-	@RequestMapping("/home/sharepanel")
-	public String homePageSharePanel(Model model, HttpSession sesion)
+	//Pagina del home del usuario, borrar panel - Privada
+	@RequestMapping("/home/deletepanel")
+	public String homePageSharePanel(Model model, HttpSession sesion, @RequestParam String actualPanel)
 	{
 		Optional <User> usuario;
 		usuario=chkSession(sesion);
@@ -385,12 +416,24 @@ public class ControladorTest
 		{
 			return noSession(model, sesion);
 		}
+		for(int i=0;i<usuario.get().getPanel().size();i++)
+			if(usuario.get().getPanel().get(i).getName().equals(actualPanel))
+			{
+				//usuario.get().getPanel().get(i).setUser(null);
+				//usuario.get().getPanel().remove(i);
+				usuario.get().removePanel(usuario.get().getPanel().get(i));
+				repo.save(usuario.get());
+				break;
+			}
+		
+		model.addAttribute("panels",usuario.get().getPanel());
+		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
 		return homeESTC(model,usuario);
 	}
 	
 	//Pagina del home del usuario, gestion de ficheros - Privada
-	@RequestMapping("/home/myfiles")
-	public String homePageMyFiles(Model model, HttpSession sesion)
+	@PostMapping("/home/upfiles")
+	public String homePageMyFiles(Model model, HttpSession sesion, @RequestParam("filesUpload") MultipartFile filesUpload, @RequestParam String actualPanel)
 	{
 		Optional <User> usuario;
 		usuario=chkSession(sesion);
@@ -398,6 +441,28 @@ public class ControladorTest
 		{
 			return noSession(model, sesion);
 		}
+		for(int i=0;i<usuario.get().getPanel().size();i++)
+			if(usuario.get().getPanel().get(i).getName().equals(actualPanel))
+			{
+				if(usuario.get().getPool()==null)
+				{
+					Pool pol = new Pool();
+					pol.setUser(usuario.get());
+					usuario.get().setPool(pol);
+				}
+				File file = new File();
+				file.setFilename(filesUpload.getName());
+				//file.setFilename("fichero");
+				usuario.get().getPanel().get(i).addFile(file);
+				if(usuario.get().getPool().getFile()==null)
+					usuario.get().getPool().setFile(new ArrayList());
+				usuario.get().getPool().getFile().add(file);
+				repo.save(usuario.get());
+				model.addAttribute("filesUser",usuario.get().getPanel().get(i).getFile());
+				break;
+			}
+		model.addAttribute("panels",usuario.get().getPanel());
+		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
 		return homeESTC(model,usuario);
 	}
 	
@@ -411,6 +476,8 @@ public class ControladorTest
 		{
 			return noSession(model, sesion);
 		}
+		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
+		model.addAttribute("panels",usuario.get().getPanel());
 		return homeESTC(model,usuario);
 	}
 	
