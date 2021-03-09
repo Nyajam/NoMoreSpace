@@ -14,6 +14,9 @@ Este proyecto busca la creación de una web de almacenamiento de ficheros de man
 - El servicio interno va a ser el encargado de calcular los bloques necesarios para almacenar un archivo. Una vez calculados los bloques que necesita los solicita al servidor.El servidor responde con la localización e identificador de los bloques.
 - El servicio interno realiza la conexión con los distintos proveedores de almacenamiento que tienen esos bloques y transfiere los archivos.
 
+# Documentación fase 2
+-Enlace a la documentación de las vistas/navegación: https://drive.google.com/file/d/11NsNpEN8ks14z5lCZdXWOMwQ8ZS81uo-/view?usp=sharing
+
 # Autores/Integrantes del proyecto
 - Ildefonso Macarro Pueyo i.macarro.2016@alumnos.urjc.es
 - Javier Lamparero López j.lamparero@alumnos.urjc.es
