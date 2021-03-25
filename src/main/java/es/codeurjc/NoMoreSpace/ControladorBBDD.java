@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Controller;
 
+import es.codeurjc.NoMoreSpace.repository.PanelRepository;
+import es.codeurjc.NoMoreSpace.repository.UserRepository;
+
 @Controller
 public class ControladorBBDD implements CommandLineRunner {
 
@@ -22,16 +25,10 @@ public class ControladorBBDD implements CommandLineRunner {
 		//Para probar cualquier cosa aquí
 		
 		//Descomentar para introducir en la bbdd
-		/*User user = new User();
-		user.addPanel(new Panel(user,"raiz"));
-		user.addPanel(new Panel());
-		Panel panel = new Panel();
+		/*User user = new User("admin", "admin@alumnos.urjc.es","123456",false,true);
+
+		repo.save(user);*/
 		
-		System.out.println(panel.getUser());
-		System.out.println(user.getPanel().get(1).getUser());
-		repo.save(user);
-		
-		System.out.println(user);*/
 		
 		/*Panel p = new Panel("carpeta 2");
 		

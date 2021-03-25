@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +8,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+
+import es.codeurjc.NoMoreSpace.model.User;
+import es.codeurjc.NoMoreSpace.repository.UserRepository;
 
 @Component
 public class UserDependencies

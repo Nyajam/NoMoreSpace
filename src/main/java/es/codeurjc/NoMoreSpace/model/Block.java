@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.model;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
 	private String username;
 	private String mail;
 	private String password;
@@ -28,16 +29,9 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Pool pool;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Panel> panel = new ArrayList<Panel>();
-	
-	public long getId() {
-		return id;
-	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	protected User() {}
 	
@@ -60,7 +54,15 @@ public class User {
 		this.admin = admin;
 		this.panel.add(new Panel(this, "Raiz"));
 	}
+	
+	public long getId() {
+		return id;
+	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 	public String getUsername() {
 		return username;
 	}

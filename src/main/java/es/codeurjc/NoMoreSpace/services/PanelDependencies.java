@@ -1,7 +1,11 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import es.codeurjc.NoMoreSpace.model.Panel;
+import es.codeurjc.NoMoreSpace.model.User;
+import es.codeurjc.NoMoreSpace.repository.UserRepository;
 
 @Component
 public class PanelDependencies

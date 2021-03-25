@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,7 @@ public class Panel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+	
 	private String name;
 	
 	@ManyToOne
@@ -43,18 +44,12 @@ public class Panel {
 		this.id = id;
 	}
 	
-	protected Panel() {}
+	public Panel() {}
 	
-	public Panel(String name) { //No usar este constructor
-		this.name = name;
-	}
-	
-	public Panel(User user, String name) {//usar este constructor para que nunca haya un panel sin usuario
+	public Panel(User user, String name) {//Usar este constructor para que nunca haya un panel sin usuario
 		this.user = user;
 		this.name = name;
 	}
-	
-
 	
 	public String getName() {
 		return name;

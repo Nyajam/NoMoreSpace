@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.controller;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +15,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.NoMoreSpace.model.File;
+import es.codeurjc.NoMoreSpace.model.Panel;
+import es.codeurjc.NoMoreSpace.model.Pool;
+import es.codeurjc.NoMoreSpace.model.User;
+import es.codeurjc.NoMoreSpace.repository.PanelRepository;
+import es.codeurjc.NoMoreSpace.repository.UserRepository;
+import es.codeurjc.NoMoreSpace.services.BlockDependencies;
+import es.codeurjc.NoMoreSpace.services.FileDependencies;
+import es.codeurjc.NoMoreSpace.services.PanelDependencies;
+import es.codeurjc.NoMoreSpace.services.PoolDependencies;
+import es.codeurjc.NoMoreSpace.services.UserDependencies;
+
 @Controller
 public class PaginaHomeuser
 {
 	@Autowired
-	private UserRepository repo;
+	private UserRepository userrepo;
+	@Autowired
+	private PanelRepository panelrepo;
 	@Autowired
 	private UserDependencies userOP;
 	@Autowired
@@ -100,7 +115,7 @@ public class PaginaHomeuser
 			nuevo=new Panel(usuario.get(),nameNewPanel);
 			workdir.getPanel().add(nuevo);
 			//usuario.get().addPanel(workdir);
-			repo.save(usuario.get());
+			userrepo.save(usuario.get());
 		}
 		model.addAttribute("panels",usuario.get().getPanel());
 		return homeESTC(model,usuario);
@@ -122,7 +137,7 @@ public class PaginaHomeuser
 				//usuario.get().getPanel().get(i).setUser(null);
 				//usuario.get().getPanel().remove(i);
 				usuario.get().removePanel(usuario.get().getPanel().get(i));
-				repo.save(usuario.get());
+				userrepo.save(usuario.get());
 				break;
 			}
 		
@@ -157,7 +172,7 @@ public class PaginaHomeuser
 				if(usuario.get().getPool().getFile()==null)
 					usuario.get().getPool().setFile(new ArrayList());
 				usuario.get().getPool().getFile().add(file);
-				repo.save(usuario.get());
+				userrepo.save(usuario.get());
 				model.addAttribute("filesUser",usuario.get().getPanel().get(i).getFile());
 				break;
 			}

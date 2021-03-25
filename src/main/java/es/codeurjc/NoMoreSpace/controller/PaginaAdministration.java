@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import es.codeurjc.NoMoreSpace.model.User;
+import es.codeurjc.NoMoreSpace.repository.UserRepository;
+import es.codeurjc.NoMoreSpace.services.BlockDependencies;
+import es.codeurjc.NoMoreSpace.services.FileDependencies;
+import es.codeurjc.NoMoreSpace.services.PanelDependencies;
+import es.codeurjc.NoMoreSpace.services.PoolDependencies;
+import es.codeurjc.NoMoreSpace.services.UserDependencies;
 
 @Controller
 public class PaginaAdministration

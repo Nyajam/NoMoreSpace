@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.model;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class File {
 		this.id = id;
 	}
 	
-	protected File() {}
+	public File() {}
 
 	public File(String filename, boolean compartido) {
 		super();

@@ -1,8 +1,10 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import es.codeurjc.NoMoreSpace.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long>{
 

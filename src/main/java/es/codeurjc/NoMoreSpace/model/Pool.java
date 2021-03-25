@@ -1,4 +1,4 @@
-package es.codeurjc.NoMoreSpace;
+package es.codeurjc.NoMoreSpace.model;
 
 import java.util.List;
 
@@ -23,29 +23,23 @@ public class Pool {
 	private User user;
 	@ManyToMany
 	private List<Block> blocks;
-	
 	@OneToMany
 	private List<File> file;
 	
 	
-	protected Pool() {}
+	public Pool() {}
 
-
-	
 	public User getUser() {
 		return user;
 	}
-
 
 	public void setUser(User user) {
 		this.user = user;
 	}
 
-
 	public List<Block> getBlocks() {
 		return blocks;
 	}
-
 
 	public void setBlocks(List<Block> blocks) {
 		this.blocks = blocks;
