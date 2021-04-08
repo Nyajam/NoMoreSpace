@@ -69,7 +69,7 @@ public class PaginaNewuser
 			return "newuser";
 		}
 		//Verificar que el usuario no exista
-		if(userOP.userNameUQ(user))
+		if(!userOP.userNameUQ(user))
 		{
 			model.addAttribute("msg","Username is use");
 			return "newuser";
