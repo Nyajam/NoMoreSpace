@@ -43,6 +43,7 @@ public class User {
 		this.bloqueado = false;
 		this.admin = false;
 		this.panel.add(new Panel(this,"Raiz"));
+		this.pool=new Pool(this);
 	}
 	
 	public User(String username, String mail, String password, boolean bloqueado, boolean admin) {

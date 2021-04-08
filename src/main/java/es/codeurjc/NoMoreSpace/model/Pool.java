@@ -1,5 +1,6 @@
 package es.codeurjc.NoMoreSpace.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -28,6 +29,13 @@ public class Pool {
 	
 	
 	public Pool() {}
+	
+	public Pool(User user)
+	{
+		this.user=user;
+		this.blocks=new ArrayList<Block>();
+		this.file=new ArrayList<File>();
+	}
 
 	public User getUser() {
 		return user;

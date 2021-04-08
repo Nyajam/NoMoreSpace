@@ -20,8 +20,7 @@ import es.codeurjc.NoMoreSpace.services.UserDependencies;
 @Controller
 public class PaginaNewuser
 {
-	@Autowired
-	private UserRepository repo;
+	
 	@Autowired
 	private UserDependencies userOP;
 	@Autowired
@@ -70,17 +69,20 @@ public class PaginaNewuser
 			return "newuser";
 		}
 		//Verificar que el usuario no exista
-		if(repo.findByUsername(user).size()!=0)
+		if(userOP.userNameUQ(user))
 		{
 			model.addAttribute("msg","Username is use");
 			return "newuser";
 		}
-		User nuevo=new User(user,mail,passwd);
-		repo.save(nuevo);
-		if(userOP.login(user,passwd,sesion)!=0)
-			model.addAttribute("msg","Usuario creado con exito, pero ha habido un problema de login");
+		if(userOP.createUser(user, mail, passwd))
+		{
+			if(userOP.login(user,passwd,sesion)!=0)
+				model.addAttribute("msg","Usuario creado con exito, pero ha habido un problema de login");
+			else
+				model.addAttribute("msg","Usuario creado!");
+		}
 		else
-			model.addAttribute("msg","Usuario creado!");
+			model.addAttribute("msg","Error al crear el usuario");
 		return "newuser";
 	}
 	

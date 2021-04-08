@@ -83,4 +83,25 @@ public class UserDependencies
 	{
 		return mail.contains("@")&&mail.substring(mail.indexOf("@")).contains(".");
 	}
+	
+	//Crea un nuevo usuario en la db
+	public boolean createUser(String name, String mail, String passwd)
+	{
+		try
+		{
+			User nuevo=new User(name,mail,passwd);
+			repo.save(nuevo);
+			return true;
+		}
+		catch(Exception e) //IllegalArgumentException
+		{
+			return false;
+		}
+	}
+	
+	//Verifica que un nombre de usuario sea unico, true -> cierto, false -> no es unico
+	public boolean userNameUQ(String name)
+	{
+		return repo.findByUsername(name).isEmpty();
+	}
 }

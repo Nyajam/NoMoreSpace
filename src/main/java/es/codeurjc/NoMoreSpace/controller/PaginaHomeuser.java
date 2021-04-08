@@ -2,7 +2,7 @@ package es.codeurjc.NoMoreSpace.controller;
 
 import java.util.ArrayList;
 import java.util.Optional;
-
+import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +30,6 @@ import es.codeurjc.NoMoreSpace.services.UserDependencies;
 @Controller
 public class PaginaHomeuser
 {
-	@Autowired
-	private UserRepository userrepo;
-	@Autowired
-	private PanelRepository panelrepo;
 	@Autowired
 	private UserDependencies userOP;
 	@Autowired
@@ -69,6 +65,7 @@ public class PaginaHomeuser
 		}
 		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
 		model.addAttribute("panels",usuario.get().getPanel());
+		model.addAttribute("filesUser",usuario.get().getPanel().get(0).getFile());
 		return homeESTC(model,usuario);
 	}
 	
@@ -82,12 +79,11 @@ public class PaginaHomeuser
 		{
 			return userOP.noSession(model, sesion);
 		}
-		//model.addAttribute("actualPanel",actualPanel+"/"+goToPanel);
-		//model.addAttribute("panels", getPanelByPath(usuario.get(),actualPanel+"/"+goToPanel).getPanel() );
-		
+		Panel panels = panelOP.getPanelByPath(usuario.get(),actualPanel+"/"+goToPanel);
+		model.addAttribute("actualPanel",actualPanel+"/"+goToPanel);
+		model.addAttribute("panels", panels);
+		model.addAttribute("filesUser",panels.getFile());
 		model.addAttribute("actualPanel",goToPanel);
-		model.addAttribute("panels",usuario.get().getPanel());
-		
 		return homeESTC(model,usuario);
 	}
 	
@@ -102,22 +98,8 @@ public class PaginaHomeuser
 			return userOP.noSession(model, sesion);
 		}
 		model.addAttribute("actualPanel",actualPanel);
-		Panel workdir, nuevo;
-		workdir=panelOP.getPanelByPath(usuario.get(),actualPanel);
-		for(int i=0;i<workdir.getPanel().size();i++)
-			if(workdir.getPanel().get(i).getName().equals(nameNewPanel))
-			{
-				model.addAttribute("panels",usuario.get().getPanel());
-				return homeESTC(model,usuario);
-			}
-		if(workdir!=null)
-		{
-			nuevo=new Panel(usuario.get(),nameNewPanel);
-			workdir.getPanel().add(nuevo);
-			//usuario.get().addPanel(workdir);
-			userrepo.save(usuario.get());
-		}
-		model.addAttribute("panels",usuario.get().getPanel());
+		panelOP.panelOnPanel(usuario.get(), actualPanel, nameNewPanel);
+		model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), actualPanel));
 		return homeESTC(model,usuario);
 	}
 	
@@ -131,24 +113,20 @@ public class PaginaHomeuser
 		{
 			return userOP.noSession(model, sesion);
 		}
-		for(int i=0;i<usuario.get().getPanel().size();i++)
-			if(usuario.get().getPanel().get(i).getName().equals(actualPanel))
-			{
-				//usuario.get().getPanel().get(i).setUser(null);
-				//usuario.get().getPanel().remove(i);
-				usuario.get().removePanel(usuario.get().getPanel().get(i));
-				userrepo.save(usuario.get());
-				break;
-			}
+		
+		String victima=actualPanel.split("/")[actualPanel.split("/").length-1];
+		String posicion=actualPanel.substring(0, actualPanel.length()-(victima.length()+1));
+		
+		panelOP.deletePanelOnPanel(usuario.get(), posicion, victima);
 		
 		model.addAttribute("panels",usuario.get().getPanel());
 		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
 		return homeESTC(model,usuario);
 	}
 	
-	//Pagina del home del usuario, gestion de ficheros - Privada
+	//Pagina del home del usuario, subida de ficheros - Privada
 	@PostMapping("/home/upfiles")
-	public String homePageMyFiles(Model model, HttpSession sesion, @RequestParam("filesUpload") MultipartFile filesUpload, @RequestParam String actualPanel)
+	public String homePageUploadFile(Model model, HttpSession sesion, @RequestParam("filesUpload") MultipartFile filesUpload, @RequestParam String actualPanel)
 	{
 		Optional <User> usuario;
 		usuario=userOP.chkSession(sesion);
@@ -156,26 +134,8 @@ public class PaginaHomeuser
 		{
 			return userOP.noSession(model, sesion);
 		}
-		for(int i=0;i<usuario.get().getPanel().size();i++)
-			if(usuario.get().getPanel().get(i).getName().equals(actualPanel))
-			{
-				if(usuario.get().getPool()==null)
-				{
-					Pool pol = new Pool();
-					pol.setUser(usuario.get());
-					usuario.get().setPool(pol);
-				}
-				File file = new File();
-				file.setFilename(filesUpload.getName());
-				//file.setFilename("fichero");
-				usuario.get().getPanel().get(i).addFile(file);
-				if(usuario.get().getPool().getFile()==null)
-					usuario.get().getPool().setFile(new ArrayList());
-				usuario.get().getPool().getFile().add(file);
-				userrepo.save(usuario.get());
-				model.addAttribute("filesUser",usuario.get().getPanel().get(i).getFile());
-				break;
-			}
+		
+		fileOP.uploadFile(usuario.get(), filesUpload, panelOP.getPanelByPath(usuario.get(), actualPanel));
 		model.addAttribute("panels",usuario.get().getPanel());
 		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
 		return homeESTC(model,usuario);

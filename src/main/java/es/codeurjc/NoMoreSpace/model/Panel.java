@@ -92,6 +92,18 @@ public class Panel {
 	public void setPanel(List<Panel> panel) {
 		this.panel = panel;
 	}
+	
+	public void addPanel(Panel p)
+	{
+		getPanel().add(p);
+		p.setUser(getUser());
+	}
+	
+	public void removePanel(Panel p)
+	{
+		getPanel().remove(p);
+		p.setUser(null);
+	}
 
 	@Override
 	public String toString() {

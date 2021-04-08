@@ -12,7 +12,6 @@ public class PoolDependencies
 	@Autowired
 	private UserRepository repo;
 	
-
 	//Retorna el peso en bytes de los files del usuario
 	public int sizeOfPool(User usuario)
 	{
@@ -21,8 +20,6 @@ public class PoolDependencies
 		//{
 		//	size=usuario.getPool().getFile().get(i);
 		//}
-		if(usuario.getPool()==null)
-			return 0;
 		size=usuario.getPool().getFile().size();
 		return size;
 	}

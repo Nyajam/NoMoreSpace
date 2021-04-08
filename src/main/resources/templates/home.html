@@ -2,10 +2,10 @@
 <section>
 <h1>{{userName}}</h1>
 	<article id="uploadfile" class="firstSection" style="display: none;">
-		<form action="/home/upfiles" method="post">
+		<form action="/home/upfiles" method="post" enctype="multipart/form-data">
 			<h3>Upload files (over this panel)</h3>
 			<input type="submit" name="upload" value="Subir"/>
-			<input type="file" name="filesUpload" />
+			<input type="file" name="filesUpload" multiple/>
 			<input type="hidden" name="actualPanel" value="{{actualPanel}}"/>
 			<hr/>
 		</form>
