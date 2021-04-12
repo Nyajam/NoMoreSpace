@@ -16,7 +16,15 @@
 				<i class="material-icons">expand_more</i>
 			</a>
 		</h3>
+		{{#msg}}
+			<p>{{msg}}</p>
+		{{/msg}}
 		<div id="listPanels" >
+			<form action="/home" method="post" id=".." onsubmit="return formToFolder('..')">
+					<input type="hidden" name="actualPanel" value=""/>
+					<input type="hidden" name="goToPanel" value=".."/>
+					<input type="submit" value=".."/>
+			</form>
 			{{#panels}}
 				<form action="/home" method="post" id="{{name}}" onsubmit="return formToFolder('{{name}}')">
 					<input type="hidden" name="actualPanel" value=""/>

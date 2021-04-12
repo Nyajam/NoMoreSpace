@@ -41,7 +41,7 @@ public class PanelDependencies
 	}
 	
 	//Crea un panel en otro especifico
-	public boolean panelOnPanel(User user,String path, String name)
+	public boolean panelOnPanel(User user, String path, String name)
 	{
 		//getPanelByPath(user, path).getPanel().add(new Panel(user, name));
 		Panel workdir = getPanelByPath(user, path);
@@ -56,12 +56,21 @@ public class PanelDependencies
 	}
 	
 	//Borra un panel de panel especifico
-	public void deletePanelOnPanel(User user,String path, String name)
+	public int deletePanelOnPanel(User user,String path, String name)
 	{
 		Panel workdir;
 		workdir=getPanelByPath(user, path);
 		for(int i=0;i<workdir.getPanel().size();i++)
 			if(workdir.getPanel().get(i).getName().equals(name))
-				workdir.removePanel(workdir.getPanel().get(i));
+			{
+				if(workdir.getPanel().get(i).getPanel().isEmpty()&&workdir.getPanel().get(i).getFile().isEmpty())
+				{
+					workdir.removePanel(workdir.getPanel().get(i));
+					return 0;
+				}
+				else
+					return 1;
+			}
+		return -1;
 	}
 }

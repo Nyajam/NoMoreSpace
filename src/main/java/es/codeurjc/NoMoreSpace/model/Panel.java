@@ -10,9 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PreRemove;
 
 
 
@@ -29,12 +31,13 @@ public class Panel {
 	@ManyToOne
 	private User user;
 
-	@OneToMany(mappedBy="panel", cascade = CascadeType.ALL)
-	private List<File> file = new ArrayList<File>();
+	@OneToMany(mappedBy="panel", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<File> file;
 	
 	//Relacion yo me tengo a mi mismo para el arbol de directorios
-	@OneToMany(mappedBy="panel", cascade = CascadeType.ALL)
-	private List<Panel> panel = new ArrayList<Panel>();
+	//@OneToMany(mappedBy="panel", cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Panel> panels;
 
 	public long getId() {
 		return id;
@@ -44,11 +47,17 @@ public class Panel {
 		this.id = id;
 	}
 	
-	public Panel() {}
+	public Panel()
+	{
+		panels=new ArrayList<Panel>();
+		file=new ArrayList<File>();
+	}
 	
 	public Panel(User user, String name) {//Usar este constructor para que nunca haya un panel sin usuario
 		this.user = user;
 		this.name = name;
+		panels=new ArrayList<Panel>();
+		file=new ArrayList<File>();
 	}
 	
 	public String getName() {
@@ -86,11 +95,11 @@ public class Panel {
 	}
 
 	public List<Panel> getPanel() {
-		return panel;
+		return panels;
 	}
 
 	public void setPanel(List<Panel> panel) {
-		this.panel = panel;
+		this.panels = panel;
 	}
 	
 	public void addPanel(Panel p)
@@ -98,6 +107,7 @@ public class Panel {
 		getPanel().add(p);
 		p.setUser(getUser());
 	}
+	
 	
 	public void removePanel(Panel p)
 	{
@@ -107,7 +117,7 @@ public class Panel {
 
 	@Override
 	public String toString() {
-		return "Panel [id=" + id + ", name=" + name + ", user=" + user.getId() + ", " + user.getUsername() + ", panel=" + panel + ", file=" + file + "]";
+		return "Panel [id=" + id + ", name=" + name + ", user=" + user.getId() + ", " + user.getUsername() + ", panel=" + panels + ", file=" + file + "]";
 	}
 	
 	

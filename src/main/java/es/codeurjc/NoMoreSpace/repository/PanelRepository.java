@@ -8,7 +8,5 @@ import es.codeurjc.NoMoreSpace.model.Panel;
 
 
 public interface PanelRepository extends JpaRepository<Panel, Long>{
-
-	List<Panel> findByPanelName(String name);
 	
 }

@@ -63,8 +63,8 @@ public class PaginaHomeuser
 		{
 			return userOP.noSession(model, sesion);
 		}
-		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
-		model.addAttribute("panels",usuario.get().getPanel());
+		model.addAttribute("actualPanel","/"+usuario.get().getPanel().get(0).getName());
+		model.addAttribute("panels",usuario.get().getPanel().get(0).getPanel());
 		model.addAttribute("filesUser",usuario.get().getPanel().get(0).getFile());
 		return homeESTC(model,usuario);
 	}
@@ -79,11 +79,30 @@ public class PaginaHomeuser
 		{
 			return userOP.noSession(model, sesion);
 		}
-		Panel panels = panelOP.getPanelByPath(usuario.get(),actualPanel+"/"+goToPanel);
-		model.addAttribute("actualPanel",actualPanel+"/"+goToPanel);
-		model.addAttribute("panels", panels);
+		Panel panels;
+		if(goToPanel.equals(".."))
+		{
+			int i=0;
+			i=actualPanel.lastIndexOf("/");
+			if(i<0)
+				i=actualPanel.length();
+			String newActualPanel=actualPanel.substring(0, i);
+			panels = panelOP.getPanelByPath(usuario.get(),newActualPanel);
+			model.addAttribute("actualPanel",newActualPanel);
+			if(panels==null)
+			{
+				panels=usuario.get().getPanel().get(0);
+				model.addAttribute("actualPanel","/"+panels.getName());
+			}
+		}
+		else
+		{
+			panels = panelOP.getPanelByPath(usuario.get(),actualPanel+"/"+goToPanel);
+			model.addAttribute("actualPanel",actualPanel+"/"+goToPanel);
+		}
+		
+		model.addAttribute("panels", panels.getPanel());
 		model.addAttribute("filesUser",panels.getFile());
-		model.addAttribute("actualPanel",goToPanel);
 		return homeESTC(model,usuario);
 	}
 	
@@ -99,7 +118,7 @@ public class PaginaHomeuser
 		}
 		model.addAttribute("actualPanel",actualPanel);
 		panelOP.panelOnPanel(usuario.get(), actualPanel, nameNewPanel);
-		model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), actualPanel));
+		model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), actualPanel).getPanel());
 		return homeESTC(model,usuario);
 	}
 	
@@ -116,11 +135,22 @@ public class PaginaHomeuser
 		
 		String victima=actualPanel.split("/")[actualPanel.split("/").length-1];
 		String posicion=actualPanel.substring(0, actualPanel.length()-(victima.length()+1));
-		
-		panelOP.deletePanelOnPanel(usuario.get(), posicion, victima);
-		
-		model.addAttribute("panels",usuario.get().getPanel());
-		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
+		int i=0;
+		i=panelOP.deletePanelOnPanel(usuario.get(), posicion, victima);
+		if(i<0)
+			model.addAttribute("msg","Error al borrar el directorio");
+		if(i==1)
+			model.addAttribute("msg","Directorio lleno, vaciar primero");
+		if(i!=0)
+		{
+			model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), actualPanel).getPanel());
+			model.addAttribute("actualPanel",actualPanel);
+		}
+		if(i==0)
+		{
+			model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), posicion).getPanel());
+			model.addAttribute("actualPanel",posicion);
+		}
 		return homeESTC(model,usuario);
 	}
 	
@@ -134,10 +164,11 @@ public class PaginaHomeuser
 		{
 			return userOP.noSession(model, sesion);
 		}
-		
-		fileOP.uploadFile(usuario.get(), filesUpload, panelOP.getPanelByPath(usuario.get(), actualPanel));
-		model.addAttribute("panels",usuario.get().getPanel());
-		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
+		Panel panel = panelOP.getPanelByPath(usuario.get(), actualPanel);
+		fileOP.uploadFile(usuario.get(), filesUpload, panel);
+		model.addAttribute("panels",panel.getPanel());
+		model.addAttribute("actualPanel",actualPanel);
+		model.addAttribute("filesUser",panel.getFile());
 		return homeESTC(model,usuario);
 	}
 	

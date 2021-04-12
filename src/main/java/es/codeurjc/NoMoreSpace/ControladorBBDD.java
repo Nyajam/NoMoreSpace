@@ -16,8 +16,6 @@ public class ControladorBBDD implements CommandLineRunner {
 
 	@Autowired
 	private UserRepository repo;
-	@Autowired
-	private PanelRepository rep;
 	
 	@Override
 	public void run(String [] args) throws Exception{
