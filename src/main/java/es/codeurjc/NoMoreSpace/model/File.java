@@ -42,7 +42,6 @@ public class File {
 	public File() {}
 
 	public File(String filename, boolean compartido) {
-		super();
 		this.filename = filename;
 		this.compartido = compartido;
 	}

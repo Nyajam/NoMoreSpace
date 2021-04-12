@@ -22,9 +22,11 @@ public class Pool {
 	
 	@OneToOne
 	private User user;
+	
 	@ManyToMany
 	private List<Block> blocks;
-	@OneToMany
+	
+	@OneToMany(mappedBy="pool", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<File> file;
 	
 	

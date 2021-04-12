@@ -66,6 +66,7 @@ public class PanelDependencies
 				if(workdir.getPanel().get(i).getPanel().isEmpty()&&workdir.getPanel().get(i).getFile().isEmpty())
 				{
 					workdir.removePanel(workdir.getPanel().get(i));
+					repo.save(user);
 					return 0;
 				}
 				else

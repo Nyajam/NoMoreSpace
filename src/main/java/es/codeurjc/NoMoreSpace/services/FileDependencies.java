@@ -16,9 +16,12 @@ public class FileDependencies
 	//Carga de un fichero
 	public boolean uploadFile(User user, MultipartFile newFile, Panel panel)
 	{
-		File file=new File(newFile.getOriginalFilename(),false);
-		user.getPool().addFile(file);
-		panel.addFile(file);
+		File fil =new File(newFile.getOriginalFilename(),false);
+		user.getPool().addFile(fil);
+		panel.addFile(fil);
+		repo.save(user);
 		return true;
 	}
+	
+	
 }

@@ -172,6 +172,21 @@ public class PaginaHomeuser
 		return homeESTC(model,usuario);
 	}
 	
+	//Pagina del home del usuario, borra ficheros - Privada
+	@RequestMapping("/home/deletefiles")
+	public String homePageDeleteFiles(Model model, HttpSession sesion)
+	{
+		Optional <User> usuario;
+		usuario=userOP.chkSession(sesion);
+		if(usuario==null)
+		{
+			return userOP.noSession(model, sesion);
+		}
+		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
+		model.addAttribute("panels",usuario.get().getPanel());
+		return homeESTC(model,usuario);
+	}
+	
 	//Pagina del home del usuario, descarga de ficheros - Privada
 	@RequestMapping("/home/downfiles")
 	public String homePageDownFiles(Model model, HttpSession sesion)
