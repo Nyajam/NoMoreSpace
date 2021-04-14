@@ -1,5 +1,6 @@
 package es.codeurjc.NoMoreSpace.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class PaginaNewuser
 
 	//Pagina de registro - Publica
 	@GetMapping("/newuser")
-	public String newuserPage(Model model, HttpSession sesion)
+	public String newuserPage(Model model, HttpServletRequest sesion)
 	{
 		model.addAttribute("userName","test");
 		model.addAttribute("panelCSS",true);
@@ -47,7 +48,7 @@ public class PaginaNewuser
 	
 	//Pagina gestion de registro - Publica
 	@RequestMapping("/newuser")
-	public String newuserPageProcess(Model model, @RequestParam String user, @RequestParam String passwd, @RequestParam String passwd2, @RequestParam String mail, HttpSession sesion)
+	public String newuserPageProcess(Model model, @RequestParam String user, @RequestParam String passwd, @RequestParam String passwd2, @RequestParam String mail, HttpServletRequest sesion)
 	{
 		model.addAttribute("userName","test");
 		model.addAttribute("panelCSS",true);
@@ -76,9 +77,10 @@ public class PaginaNewuser
 		}
 		if(userOP.createUser(user, mail, passwd))
 		{
-			if(userOP.login(user,passwd,sesion)!=0)
+			/*if(userOP.login(user,passwd,sesion)!=0)
 				model.addAttribute("msg","Usuario creado con exito, pero ha habido un problema de login");
 			else
+			*/
 				model.addAttribute("msg","Usuario creado!");
 		}
 		else

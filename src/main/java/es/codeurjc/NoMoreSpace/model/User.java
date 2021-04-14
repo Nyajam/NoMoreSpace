@@ -13,8 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Entity
 public class User {
+	
+	//@Autowired
+	//private PasswordEncoder passwordEncoder;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +45,7 @@ public class User {
 		
 		this.username = username;
 		this.mail = mail;
-		this.password = password;
+		setPassword(password);
 		this.bloqueado = false;
 		this.admin = false;
 		this.panel.add(new Panel(this,"Raiz"));
@@ -50,7 +56,7 @@ public class User {
 		
 		this.username = username;
 		this.mail = mail;
-		this.password = password;
+		setPassword(password);
 		this.bloqueado = bloqueado;
 		this.admin = admin;
 		this.panel.add(new Panel(this, "Raiz"));
@@ -82,10 +88,11 @@ public class User {
 
 	public String getPassword() {
 		return password;
+		//return passwordEncoder.encode(this.password).toString();
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = encrypt(password);
 	}
 
 	public boolean isBloqueado() {
@@ -131,8 +138,19 @@ public class User {
 	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", mail=" + mail + ", password=" + password + ", username=" + username
+		return "User [id=" + id + ", mail=" + mail + ", password=" + getPassword() + ", username=" + username
 				+ ", bloqueado=" + bloqueado + ", admin=" + admin + ", panel=" + panel + ", pool=" + pool + "]";
 	}
 
+	public boolean comparePasswd(String pas)
+	{
+		return this.getPassword().equals(encrypt(pas));
+	}
+	
+	public String encrypt(String value)
+	{
+		return value;
+		//return new String()+value.hashCode();
+		//return passwordEncoder.encode(value).toString();
+	}
 }

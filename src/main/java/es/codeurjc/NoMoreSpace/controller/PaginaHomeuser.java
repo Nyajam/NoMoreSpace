@@ -3,6 +3,8 @@ package es.codeurjc.NoMoreSpace.controller;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +44,11 @@ public class PaginaHomeuser
 	private BlockDependencies blockOP;
 
 	//Parte comun del home del usuario
-	private String homeESTC(Model model, Optional <User> usuario)
+	private String homeESTC(Model model, User usuario)
 	{
-		model.addAttribute("userName",usuario.get().getUsername());
+		model.addAttribute("userName",usuario.getUsername());
 		model.addAttribute("panelCSS",false);
-		model.addAttribute("admin",usuario.get().isAdmin()); //SI EL USUARIO ES ADMINISTRADOR
+		model.addAttribute("admin",usuario.isAdmin()); //SI EL USUARIO ES ADMINISTRADOR
 		model.addAttribute("titleApp","NoMoreSpacePlease!");
 		model.addAttribute("titlePage","Home");
 		model.addAttribute("home",true);
@@ -55,30 +57,22 @@ public class PaginaHomeuser
 
 	//Pagina del home del usuario - Privada
 	@GetMapping("/home")
-	public String homePage(Model model, HttpSession sesion)
+	public String homePage(Model model, HttpServletRequest sesion)
 	{
-		Optional <User> usuario;
+		User usuario;
 		usuario=userOP.chkSession(sesion);
-		if(usuario==null)
-		{
-			return userOP.noSession(model, sesion);
-		}
-		model.addAttribute("actualPanel","/"+usuario.get().getPanel().get(0).getName());
-		model.addAttribute("panels",usuario.get().getPanel().get(0).getPanel());
-		model.addAttribute("filesUser",usuario.get().getPanel().get(0).getFile());
+		model.addAttribute("actualPanel","/"+usuario.getPanel().get(0).getName());
+		model.addAttribute("panels",usuario.getPanel().get(0).getPanel());
+		model.addAttribute("filesUser",usuario.getPanel().get(0).getFile());
 		return homeESTC(model,usuario);
 	}
 	
 	//Pagina del home del usuario - Privada
 	@RequestMapping("/home")
-	public String homePageProcess(Model model, HttpSession sesion, @RequestParam String actualPanel, @RequestParam String goToPanel)
+	public String homePageProcess(Model model, HttpServletRequest sesion, @RequestParam String actualPanel, @RequestParam String goToPanel)
 	{
-		Optional <User> usuario;
+		User usuario;
 		usuario=userOP.chkSession(sesion);
-		if(usuario==null)
-		{
-			return userOP.noSession(model, sesion);
-		}
 		Panel panels;
 		if(goToPanel.equals(".."))
 		{
@@ -87,17 +81,17 @@ public class PaginaHomeuser
 			if(i<0)
 				i=actualPanel.length();
 			String newActualPanel=actualPanel.substring(0, i);
-			panels = panelOP.getPanelByPath(usuario.get(),newActualPanel);
+			panels = panelOP.getPanelByPath(usuario,newActualPanel);
 			model.addAttribute("actualPanel",newActualPanel);
 			if(panels==null)
 			{
-				panels=usuario.get().getPanel().get(0);
+				panels=usuario.getPanel().get(0);
 				model.addAttribute("actualPanel","/"+panels.getName());
 			}
 		}
 		else
 		{
-			panels = panelOP.getPanelByPath(usuario.get(),actualPanel+"/"+goToPanel);
+			panels = panelOP.getPanelByPath(usuario,actualPanel+"/"+goToPanel);
 			model.addAttribute("actualPanel",actualPanel+"/"+goToPanel);
 		}
 		
@@ -108,47 +102,38 @@ public class PaginaHomeuser
 	
 	//Pagina del home del usuario, creacion de panel - Privada
 	@RequestMapping("/home/newpanel")
-	public String homePageNewPanel(Model model, HttpSession sesion, @RequestParam String nameNewPanel, @RequestParam String actualPanel)
+	public String homePageNewPanel(Model model, HttpServletRequest sesion, @RequestParam String nameNewPanel, @RequestParam String actualPanel)
 	{
-		Optional <User> usuario;
+		User usuario;
 		usuario=userOP.chkSession(sesion);
-		if(usuario==null)
-		{
-			return userOP.noSession(model, sesion);
-		}
 		model.addAttribute("actualPanel",actualPanel);
-		panelOP.panelOnPanel(usuario.get(), actualPanel, nameNewPanel);
-		model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), actualPanel).getPanel());
+		panelOP.panelOnPanel(usuario, actualPanel, nameNewPanel);
+		model.addAttribute("panels",panelOP.getPanelByPath(usuario, actualPanel).getPanel());
 		return homeESTC(model,usuario);
 	}
 	
 	//Pagina del home del usuario, borrar panel - Privada
 	@RequestMapping("/home/deletepanel")
-	public String homePageSharePanel(Model model, HttpSession sesion, @RequestParam String actualPanel)
+	public String homePageSharePanel(Model model, HttpServletRequest sesion, @RequestParam String actualPanel)
 	{
-		Optional <User> usuario;
+		User usuario;
 		usuario=userOP.chkSession(sesion);
-		if(usuario==null)
-		{
-			return userOP.noSession(model, sesion);
-		}
-		
 		String victima=actualPanel.split("/")[actualPanel.split("/").length-1];
 		String posicion=actualPanel.substring(0, actualPanel.length()-(victima.length()+1));
 		int i=0;
-		i=panelOP.deletePanelOnPanel(usuario.get(), posicion, victima);
+		i=panelOP.deletePanelOnPanel(usuario, posicion, victima);
 		if(i<0)
 			model.addAttribute("msg","Error al borrar el directorio");
 		if(i==1)
 			model.addAttribute("msg","Directorio lleno, vaciar primero");
 		if(i!=0)
 		{
-			model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), actualPanel).getPanel());
+			model.addAttribute("panels",panelOP.getPanelByPath(usuario, actualPanel).getPanel());
 			model.addAttribute("actualPanel",actualPanel);
 		}
 		if(i==0)
 		{
-			model.addAttribute("panels",panelOP.getPanelByPath(usuario.get(), posicion).getPanel());
+			model.addAttribute("panels",panelOP.getPanelByPath(usuario, posicion).getPanel());
 			model.addAttribute("actualPanel",posicion);
 		}
 		return homeESTC(model,usuario);
@@ -156,16 +141,12 @@ public class PaginaHomeuser
 	
 	//Pagina del home del usuario, subida de ficheros - Privada
 	@PostMapping("/home/upfiles")
-	public String homePageUploadFile(Model model, HttpSession sesion, @RequestParam("filesUpload") MultipartFile filesUpload, @RequestParam String actualPanel)
+	public String homePageUploadFile(Model model, HttpServletRequest sesion, @RequestParam("filesUpload") MultipartFile filesUpload, @RequestParam String actualPanel)
 	{
-		Optional <User> usuario;
+		User usuario;
 		usuario=userOP.chkSession(sesion);
-		if(usuario==null)
-		{
-			return userOP.noSession(model, sesion);
-		}
-		Panel panel = panelOP.getPanelByPath(usuario.get(), actualPanel);
-		fileOP.uploadFile(usuario.get(), filesUpload, panel);
+		Panel panel = panelOP.getPanelByPath(usuario, actualPanel);
+		fileOP.uploadFile(usuario, filesUpload, panel);
 		model.addAttribute("panels",panel.getPanel());
 		model.addAttribute("actualPanel",actualPanel);
 		model.addAttribute("filesUser",panel.getFile());
@@ -174,31 +155,24 @@ public class PaginaHomeuser
 	
 	//Pagina del home del usuario, borra ficheros - Privada
 	@RequestMapping("/home/deletefiles")
-	public String homePageDeleteFiles(Model model, HttpSession sesion)
+	public String homePageDeleteFiles(Model model, HttpServletRequest sesion)
 	{
-		Optional <User> usuario;
+		User usuario;
 		usuario=userOP.chkSession(sesion);
-		if(usuario==null)
-		{
-			return userOP.noSession(model, sesion);
-		}
-		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
-		model.addAttribute("panels",usuario.get().getPanel());
+		//model.addAttribute("panels",panel.getPanel());
+		//model.addAttribute("actualPanel",actualPanel);
+		//model.addAttribute("filesUser",panel.getFile());
 		return homeESTC(model,usuario);
 	}
 	
 	//Pagina del home del usuario, descarga de ficheros - Privada
 	@RequestMapping("/home/downfiles")
-	public String homePageDownFiles(Model model, HttpSession sesion)
+	public String homePageDownFiles(Model model, HttpServletRequest sesion)
 	{
-		Optional <User> usuario;
+		User usuario;
 		usuario=userOP.chkSession(sesion);
-		if(usuario==null)
-		{
-			return userOP.noSession(model, sesion);
-		}
-		model.addAttribute("actualPanel",usuario.get().getPanel().get(0).getName());
-		model.addAttribute("panels",usuario.get().getPanel());
+		model.addAttribute("actualPanel",usuario.getPanel().get(0).getName());
+		model.addAttribute("panels",usuario.getPanel());
 		return homeESTC(model,usuario);
 	}
 	

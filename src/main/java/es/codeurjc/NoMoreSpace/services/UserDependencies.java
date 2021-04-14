@@ -3,6 +3,7 @@ package es.codeurjc.NoMoreSpace.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,11 @@ public class UserDependencies
 	private final int TIEMPO_SESION_MINUTOS=20;
 
 	//Comprueba si la sesion es valida, retorna el usuario
-	public Optional <User> chkSession(HttpSession sesion)
+	public User chkSession(HttpServletRequest sesion)
 	{
-		if(sesion.getAttribute("token")==null)
-			return null;
-		if(!(sesion.getAttribute("token") instanceof Long))
-			return null;
-		Optional <User> usuario = repo.findById( ((Long)sesion.getAttribute("token")).longValue() );
-		if(usuario.isPresent())
-			return usuario;
+		List<User> usuario = repo.findByUsername(sesion.getUserPrincipal().getName());
+		if(usuario.size()==1)
+			return usuario.get(0);
 		else
 			return null;
 	}
@@ -48,6 +45,7 @@ public class UserDependencies
 		return "hook";
 	}
 	
+	/*
 	//Login de un usuario, retorna 0 todo bien, 1 bloqueado, 2 passwd incorrecta, 3 usuario inexistente
 	public int login(String user, String passwd, HttpSession sesion)
 	{
@@ -57,11 +55,13 @@ public class UserDependencies
 		if( !usuario.isEmpty() )
 		{
 			//Si la passwd es correcta
-			if( usuario.get(0).getPassword().equals(passwd) )
+			if( usuario.get(0).comparePasswd(passwd) ) //.getPassword().equals(passwd) )
 			{
 				//Si el usuario no esta bloqueado
 				if(!usuario.get(0).isBloqueado())
 				{
+					if(sesion==null)
+						return 0;
 					if(chkSession(sesion)!=null)
 						sesion.invalidate();
 					sesion.setAttribute("token", usuario.get(0).getId());
@@ -77,6 +77,7 @@ public class UserDependencies
 		else
 			return 3;
 	}
+	*/
 	
 	//Indica si un mail es valido o no
 	public boolean chkMail(String mail)

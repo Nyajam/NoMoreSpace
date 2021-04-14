@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import es.codeurjc.NoMoreSpace.model.User;
 import es.codeurjc.NoMoreSpace.repository.UserRepository;
 import es.codeurjc.NoMoreSpace.services.BlockDependencies;
 import es.codeurjc.NoMoreSpace.services.FileDependencies;

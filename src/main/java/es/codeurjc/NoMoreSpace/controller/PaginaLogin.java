@@ -1,5 +1,6 @@
 package es.codeurjc.NoMoreSpace.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +36,14 @@ public class PaginaLogin
 
 	//Pagina de apertura de login - Publica
 	@GetMapping("/login")
-	public String loginPage(Model model, HttpSession sesion)
+	public String loginPage(Model model, HttpServletRequest sesion)
 	{
 		//Si el usuario tiene una sesion abierta
-		if(userOP.chkSession(sesion)!=null)
+		/*if(userOP.chkSession(sesion.getSession())!=null)
 		{
 			model.addAttribute("URL","/home");
 			return "hook";
-		}
+		}*/
 		model.addAttribute("panelCSS",true);
 		model.addAttribute("index",true);
 		model.addAttribute("login",true);
@@ -52,9 +53,10 @@ public class PaginaLogin
 		return "login";
 	}
 	
+	/*
 	//Pagina del logout - Publica
 	@GetMapping("/logout")
-	public String logoutPage(Model model, HttpSession sesion)
+	public String logoutPage(Model model, HttpServletRequest sesion)
 	{
 		model.addAttribute("panelCSS",true);
 		model.addAttribute("index",true);
@@ -63,9 +65,17 @@ public class PaginaLogin
 		model.addAttribute("titleApp","NoMoreSpacePlease!");
 		model.addAttribute("titlePage","Login");
 		//Si existe una sesion
-		if(userOP.chkSession(sesion)!=null)
+		if(userOP.chkSession(sesion.getSession())!=null)
 		{
-			sesion.invalidate();
+			try
+			{
+				sesion.logout();
+			}
+			catch(Exception e)
+			{
+				model.addAttribute("msgError",e.toString());
+				model.addAttribute("expulse",true);
+			}
 			model.addAttribute("msgError","Sesion cerrada");
 			model.addAttribute("expulse",true);
 		}
@@ -76,10 +86,12 @@ public class PaginaLogin
 		}
 		return "login";
 	}
+	*/
 	
+	/*
 	//Pagina gestion de login - Publica
 	@RequestMapping("/login")
-	public String loginPageProcess(Model model, HttpSession sesion, @RequestParam String user, @RequestParam String passwd)
+	public String loginPageProcess(Model model, HttpServletRequest sesion, @RequestParam String user, @RequestParam String passwd)
 	{
 		//Elementos basicos de la pagina
 		model.addAttribute("panelCSS",true); //Si emplea la plantilla general o un panel de informacion
@@ -113,5 +125,5 @@ public class PaginaLogin
 		}
 		return "login";
 	}
-	
+	*/
 }
