@@ -27,7 +27,7 @@ public class FileDependencies
 		File fil =new File(newFile.getOriginalFilename(),false);
 		try {
 			String host = "localhost";
-			int port = 8080;
+			int port = 442;
 			Socket socket = new Socket(host, port);
 			OutputStream out = socket.getOutputStream();
 			ObjectOutputStream oout = new ObjectOutputStream(out);
@@ -37,7 +37,7 @@ public class FileDependencies
 				System.out.println("True enviado");
 				oout.writeInt((int)fil.getId());
 				System.out.println("Id enviado");
-				oout.writeObject(newFile.getBytes());
+				out.write(newFile.getBytes());
 				System.out.println("File enviado");
 			}
 			oout.close();
@@ -60,7 +60,7 @@ public class FileDependencies
 		MultipartFile recibido = null;
 		try {
 			String host = "localhost";
-			int port = 8080;
+			int port = 442;
 			Socket socket = new Socket(host, port);
 			OutputStream out = socket.getOutputStream();
 			InputStream in = socket.getInputStream();

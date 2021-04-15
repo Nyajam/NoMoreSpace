@@ -15,10 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class InFiles {
 	
-	public void getFiles() throws IOException{
+	/*public void getFiles() throws IOException{
 		System.out.println("Empezar");
-		String serverFolder = ".//src//main//resources//files//";
-		ServerSocket server = new ServerSocket(8080);
+		String serverFolder = "C:\\Users\\j.lamparero\\git\\NMSFiles";
+		ServerSocket server = new ServerSocket(442);
 		while (true) {
 			Socket socket = server.accept();
 			
@@ -54,6 +54,6 @@ public class InFiles {
 			}
 			server.close();
 		}
-	}
+	}*/
 
 }
