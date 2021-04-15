@@ -155,19 +155,27 @@ public class PaginaHomeuser
 	
 	//Pagina del home del usuario, borra ficheros - Privada
 	@RequestMapping("/home/deletefiles")
-	public String homePageDeleteFiles(Model model, HttpServletRequest sesion)
+	public String homePageDeleteFiles(Model model, HttpServletRequest sesion, @RequestParam String idFile, @RequestParam String actualPanel)
 	{
-		User usuario;
-		usuario=userOP.chkSession(sesion);
-		//model.addAttribute("panels",panel.getPanel());
-		//model.addAttribute("actualPanel",actualPanel);
-		//model.addAttribute("filesUser",panel.getFile());
+		User usuario=userOP.chkSession(sesion);
+		Panel panel = panelOP.getPanelByPath(usuario, actualPanel);
+		long id;
+		try
+		{
+			id=Long.parseLong(idFile);
+			fileOP.deleteFile(usuario, id);
+		}
+		catch(Exception e)
+		{}
+		model.addAttribute("panels",panel.getPanel());
+		model.addAttribute("actualPanel",actualPanel);
+		model.addAttribute("filesUser",panel.getFile());
 		return homeESTC(model,usuario);
 	}
 	
 	//Pagina del home del usuario, descarga de ficheros - Privada
 	@RequestMapping("/home/downfiles")
-	public String homePageDownFiles(Model model, HttpServletRequest sesion)
+	public String homePageDownFiles(Model model, HttpServletRequest sesion, @RequestParam String idFile)
 	{
 		User usuario;
 		usuario=userOP.chkSession(sesion);

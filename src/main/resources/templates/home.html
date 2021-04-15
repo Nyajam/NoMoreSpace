@@ -34,23 +34,35 @@
 			{{/panels}}
 		</div>
 	</article>
-	<form action="/home/downfiles" method="post">
+
 		<article class="firstSection">
 			<h3>My files
-			<a href="#" onclick="desplegar('listFiles')">
-				<i class="material-icons">expand_more</i>
-			</a>
-		</h3>
-			<input type="submit" name="detele" value="Borrar"/>
-			<input type="submit" name="download" value="Descargar"/>
+				<a href="#" onclick="desplegar('listFiles')">
+					<i class="material-icons">expand_more</i>
+				</a>
+			</h3>
 			<hr/>
 		</article>
 		<article id="listFiles">
 			{{#filesUser}}
-				<input type="checkbox" name="idFile" value={{id}}/>File name: {{filename}}<br/><hr class="lineOptions"/>
+				<div style="display:block ruby;">
+					File name: {{filename}}
+					<form action="/home/downfiles" method="post">
+						<input type="hidden" name="idFile" value="{{id}}"/>
+						<input type="hidden" name="actualPanel" value="{{actualPanel}}"/>
+						<input type="submit" name="download" value="Descargar"/>
+					</form>
+					<form action="/home/deletefiles" method="post">
+						<input type="hidden" name="idFile" value="{{id}}"/>
+						<input type="hidden" name="actualPanel" value="{{actualPanel}}"/>
+						<input type="submit" name="detele" value="Borrar"/>
+					</form>
+					<br/>
+				</div>
+				<hr class="lineOptions"/>
 			{{/filesUser}}
 		</article>
-	</form>
+
 </section>
 <aside>
 	<p>Panel actual:</p>
