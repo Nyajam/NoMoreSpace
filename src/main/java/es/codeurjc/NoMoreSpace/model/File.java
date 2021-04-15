@@ -1,5 +1,6 @@
 package es.codeurjc.NoMoreSpace.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -44,6 +45,7 @@ public class File {
 	public File(String filename, boolean compartido) {
 		this.filename = filename;
 		this.compartido = compartido;
+		this.blocks=new ArrayList();
 	}
 
 	public String getFilename() {

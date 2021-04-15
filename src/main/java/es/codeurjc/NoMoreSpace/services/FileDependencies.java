@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.NoMoreSpace.model.*;
+import es.codeurjc.NoMoreSpace.repository.FileRepository;
 import es.codeurjc.NoMoreSpace.repository.UserRepository;
 
 @Component
@@ -20,6 +21,8 @@ public class FileDependencies
 {
 	@Autowired
 	private UserRepository repo;
+	@Autowired
+	private FileRepository repoFiles;
 	
 	//Carga de un fichero
 	public boolean uploadFile(User user, MultipartFile newFile, Panel panel)
@@ -91,5 +94,19 @@ public class FileDependencies
 		return recibido;
 	}
 	
-	
+	//Borra un file
+	public boolean deleteFile(User user, long id)
+	{
+		File fil=repoFiles.findById(id).get();
+		if(fil==null)
+			return false;
+		if((fil.getBlocks().size()==0||fil.getBlocks()==null)&&user.getPool().equals(fil.getPool()))
+		{
+			user.getPool().removeFile(fil);
+			fil.getPanel().removeFile(fil);
+			repo.save(user);
+			return true;
+		}
+		return false;
+	}
 }

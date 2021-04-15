@@ -60,14 +60,6 @@ public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter
 		http.csrf().disable();
 	}
 	
-	/*
-	@Override
-	public void configure(WebSecurity web) throws Exception
-	{
-        web.ignoring().antMatchers("/");
-    }
-	*/
-	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception
 	{
