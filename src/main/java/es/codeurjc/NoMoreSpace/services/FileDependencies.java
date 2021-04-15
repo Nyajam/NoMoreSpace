@@ -2,6 +2,7 @@ package es.codeurjc.NoMoreSpace.services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -32,7 +33,6 @@ public class FileDependencies
 			int port = 8080;
 			Socket socket = new Socket(host, port);
 			OutputStream out = socket.getOutputStream();
-			InputStream in = socket.getInputStream();
 			ObjectOutputStream oout = new ObjectOutputStream(out);
 			
 			if(!newFile.isEmpty()) {
@@ -43,8 +43,7 @@ public class FileDependencies
 				oout.writeObject(newFile.getBytes());
 				System.out.println("File enviado");
 			}
-			
-			in.close();
+			oout.close();
 			out.close();
 			socket.close();
 			
@@ -57,6 +56,42 @@ public class FileDependencies
 		panel.addFile(fil);
 		repo.save(user);
 		return true;
+	}
+	
+	//Descarga de un fichero
+	public MultipartFile donwloadFile(int id) {
+		MultipartFile recibido = null;
+		try {
+			String host = "localhost";
+			int port = 8080;
+			Socket socket = new Socket(host, port);
+			OutputStream out = socket.getOutputStream();
+			InputStream in = socket.getInputStream();
+			ObjectOutputStream oout = new ObjectOutputStream(out);
+			ObjectInputStream ois = new ObjectInputStream(in);
+			
+			oout.writeBoolean(false);//queremos que nos devuelva el archivo por lo que se lo indicamos al servicio interno	
+			System.out.println("False enviado");
+			oout.writeInt(id);
+			System.out.println("Id enviado");
+			recibido = (MultipartFile) ois.readObject();
+			System.out.println("File recibido");
+			
+			ois.close();
+			oout.close();
+			in.close();
+			out.close();
+			socket.close();
+			
+		}catch (UnknownHostException e) {
+			System.err.println("Host desconocido");
+		}catch (IOException e) {
+			System.err.println("Error I/O");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return recibido;
 	}
 	
 	//Borra un file
@@ -74,36 +109,4 @@ public class FileDependencies
 		}
 		return false;
 	}
-	
-	/*public void upFile(MultipartFile file, long id) throws IOException {
-		try {
-			String host = "localhost";
-			int port = 8081;
-			Socket socket = new Socket(host, port);
-			OutputStream out = socket.getOutputStream();
-			InputStream in = socket.getInputStream();
-			ObjectOutputStream oout = new ObjectOutputStream(out);
-			
-			if(!file.isEmpty()) {
-				oout.writeBoolean(true);//si manda true escribe archivo, si manda false recibe archivo
-				System.out.println("True enviado");
-				oout.writeInt((int)id);
-				System.out.println("Id enviado");
-				oout.writeObject(file);
-				System.out.println("File enviado");
-			}
-			
-			in.close();
-			out.close();
-			socket.close();
-			
-		}catch (UnknownHostException e) {
-			System.err.println("Host desconocido");
-		}catch (IOException e) {
-			System.err.println("Error I/O");
-		}
-		
-	}*/
-	
-	
 }
