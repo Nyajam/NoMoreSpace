@@ -42,19 +42,17 @@ public class InFiles {
 					Path path = Paths.get(serverFolder, ""+id);
 					Files.copy(path, oos);
 				}
-
-				
 				ois.close();
 				out.close();
 				in.close();
 				socket.close();
-				
 			}catch (IOException e){
 				System.out.println("Fallo en la conexion.");
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			server.close();
 		}
 	}
 
