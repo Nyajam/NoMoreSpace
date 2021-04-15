@@ -39,18 +39,21 @@ public class ServicioInternoApplication {
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				
 				System.out.println("Antes de leer boolean");
-				boolean modo = ois.readBoolean();//definimos protocolo, si recibe true guarda archivo si recibe false lo envía
+				int modo = ois.readInt();//definimos protocolo, si recibe true guarda archivo si recibe false lo envía
 				System.out.println("True recibido");
 				int id = ois.readInt();
 				System.out.println("Id recibido");
-				if(modo) {
+				if(modo==1) {//Guardado de archivo
 					System.out.println("File recibido");
 					Path path = Paths.get(serverFolder, ""+id);
 					Files.write(path, in.readAllBytes());
 					System.out.println("File guardado");
-				}else {
+				}else if(modo==2){//Descarga de archivo
 					Path path = Paths.get(serverFolder, ""+id);
 					Files.copy(path, oos);
+				}else {//Borrado de archivo
+					Path path = Paths.get(serverFolder, ""+id);
+					Files.delete(path);
 				}
 				ois.close();
 				out.close();

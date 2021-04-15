@@ -36,8 +36,8 @@ public class FileDependencies
 			ObjectOutputStream oout = new ObjectOutputStream(out);
 			
 			if(!newFile.isEmpty()) {
-				oout.writeBoolean(true);//si manda true escribe archivo, si manda false recibe archivo
-				System.out.println("True enviado");
+				oout.writeInt(1);//queremos mandar el archivo por lo que lo indicamos al servicio interno con un 1
+				System.out.println("1 enviado");
 				oout.writeInt((int)fil.getId());
 				System.out.println("Id enviado");
 				out.write(newFile.getBytes());
@@ -59,7 +59,7 @@ public class FileDependencies
 	}
 	
 	//Descarga de un fichero
-	public MultipartFile donwloadFile(int id) {
+	public MultipartFile donwloadFile(long id) {
 		MultipartFile recibido = null;
 		try {
 			String host = "localhost";
@@ -70,9 +70,9 @@ public class FileDependencies
 			ObjectOutputStream oout = new ObjectOutputStream(out);
 			ObjectInputStream ois = new ObjectInputStream(in);
 			
-			oout.writeBoolean(false);//queremos que nos devuelva el archivo por lo que se lo indicamos al servicio interno	
-			System.out.println("False enviado");
-			oout.writeInt(id);
+			oout.writeInt(2);//queremos que nos devuelva el archivo por lo que se lo indicamos al servicio interno con un 2
+			System.out.println("2 enviado");
+			oout.writeInt((int) id);
 			System.out.println("Id enviado");
 			recibido = (MultipartFile) ois.readObject();
 			System.out.println("File recibido");
@@ -102,6 +102,28 @@ public class FileDependencies
 			return false;
 		if((fil.getBlocks().size()==0||fil.getBlocks()==null)&&user.getPool().equals(fil.getPool()))
 		{
+			try {
+				String host = "localhost";
+				int port = 442;
+				Socket socket = new Socket(host, port);
+				OutputStream out = socket.getOutputStream();
+				ObjectOutputStream oout = new ObjectOutputStream(out);
+				
+				oout.writeInt(3);//queremos borrar el archivo por lo que enviamos un 3
+				System.out.println("3 enviado");
+				oout.writeInt((int) id);
+				System.out.println("Id enviado");
+				
+				oout.close();
+				out.close();
+				socket.close();
+				
+			}catch (UnknownHostException e) {
+				System.err.println("Host desconocido");
+			}catch (IOException e) {
+				System.err.println("Error I/O");
+			}
+			
 			user.getPool().removeFile(fil);
 			fil.getPanel().removeFile(fil);
 			repo.save(user);
@@ -109,4 +131,5 @@ public class FileDependencies
 		}
 		return false;
 	}
+	
 }
