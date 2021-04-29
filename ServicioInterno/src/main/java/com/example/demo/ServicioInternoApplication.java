@@ -27,7 +27,8 @@ public class ServicioInternoApplication {
 
 	public static void getFiles() throws IOException{
 		System.out.println("Empezar");
-		String serverFolder = "C:\\Users\\j.lamparero\\git\\NMSFiles";
+		//String serverFolder = "C:\\Users\\j.lamparero\\git\\NMSFiles";
+		String serverFolder = "/opt/DADfiles";
 		ServerSocket server = new ServerSocket(443);
 		while (true) {
 			Socket socket = server.accept();
