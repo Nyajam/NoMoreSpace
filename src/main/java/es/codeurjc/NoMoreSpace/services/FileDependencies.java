@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +19,7 @@ import es.codeurjc.NoMoreSpace.repository.UserRepository;
 @Component
 public class FileDependencies
 {
-	@Value("${serviciointerno}")
-	private String direccionServicioInterno;
+	private final String direccionServicioInterno="10.88.1.5";
 	private final int puertoServicioInterno =443;
 	
 	@Autowired

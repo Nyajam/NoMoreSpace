@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import es.codeurjc.NoMoreSpace.services.PanelDependencies;
 import es.codeurjc.NoMoreSpace.services.PoolDependencies;
 import es.codeurjc.NoMoreSpace.services.UserDependencies;
 
+@CacheConfig(cacheNames="users")
 @Controller
 public class PaginaAdministration
 {
@@ -65,6 +69,7 @@ public class PaginaAdministration
 	}
 	
 	//Pagina de administracion, ajustes de usuarios - Privada
+	@CacheEvict(allEntries=true)
 	@RequestMapping("/adm")
 	public String admPageProcessUsers(Model model, HttpServletRequest sesion, @RequestParam String passwd, @RequestParam String passwd2, @RequestParam String lock, @RequestParam String adm, @RequestParam String mail, @RequestParam String userName)
 	{
