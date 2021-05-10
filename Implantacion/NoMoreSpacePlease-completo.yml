@@ -1,0 +1,32 @@
+web1:
+  image: localhost/nomorespacepleaseweb:latest
+  links:
+    - db
+    - service
+    - balancer
+
+web2:
+  image: localhost/nomorespacepleaseweb:latest
+  links:
+    - db
+    - service
+    - balancer
+
+db:
+  image: docker.io/library/mysql:8
+  environment:
+    - MYSQL_ROOT_PASSWORD='NoMoreSpacePlease'
+  volumes:
+    - /opt/db:/var/lib/mysql
+
+service:
+  image: localhost/nomorespacepleaseservice:latest
+  volumes:
+    - /opt/files:/opt/DADfiles
+
+balancer:
+  image: docker.io/library/haproxy:latest
+  volumes:
+    - /etc/haproxy-container:/usr/local/etc/haproxy
+  ports:
+    443:443

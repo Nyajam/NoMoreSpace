@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,10 @@ import es.codeurjc.NoMoreSpace.repository.UserRepository;
 @Component
 public class FileDependencies
 {
+	@Value("${serviciointerno}")
+	private String direccionServicioInterno;
+	private final int puertoServicioInterno =443;
+	
 	@Autowired
 	private UserRepository repo;
 	@Autowired
@@ -29,9 +34,7 @@ public class FileDependencies
 	{
 		File fil =new File(newFile.getOriginalFilename(),false);
 		try {
-			String host = "localhost";
-			int port = 443;
-			Socket socket = new Socket(host, port);
+			Socket socket = new Socket(direccionServicioInterno, puertoServicioInterno);
 			InputStream in = socket.getInputStream();
 			ObjectInputStream ois = new ObjectInputStream(in);
 			OutputStream out = socket.getOutputStream();
@@ -68,9 +71,7 @@ public class FileDependencies
 	public MultipartFile donwloadFile(int id) {
 		MultipartFile recibido = null;
 		try {
-			String host = "localhost";
-			int port = 443;
-			Socket socket = new Socket(host, port);
+			Socket socket = new Socket(direccionServicioInterno, puertoServicioInterno);
 			OutputStream out = socket.getOutputStream();
 			InputStream in = socket.getInputStream();
 			ObjectOutputStream oout = new ObjectOutputStream(out);
