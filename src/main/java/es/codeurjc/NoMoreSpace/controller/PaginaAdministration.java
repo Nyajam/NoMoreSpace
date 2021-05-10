@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ public class PaginaAdministration
 	private BlockDependencies blockOP;
 	
 	//Parte comun del adm
+	@Cacheable
 	private String admESTC(Model model, User usuario)
 	{
 		model.addAttribute("userName","test");
@@ -69,7 +71,8 @@ public class PaginaAdministration
 	}
 	
 	//Pagina de administracion, ajustes de usuarios - Privada
-	@CacheEvict(allEntries=true)
+	@Cacheable
+	@CacheEvict(value = "users", allEntries = true)
 	@RequestMapping("/adm")
 	public String admPageProcessUsers(Model model, HttpServletRequest sesion, @RequestParam String passwd, @RequestParam String passwd2, @RequestParam String lock, @RequestParam String adm, @RequestParam String mail, @RequestParam String userName)
 	{

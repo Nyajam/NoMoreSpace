@@ -10,15 +10,16 @@ import es.codeurjc.NoMoreSpace.model.User;
 
 @CacheConfig(cacheNames="users")
 public interface UserRepository extends JpaRepository<User, Long>{
-	@Cacheable
+	
+	//@Cacheable
 	List<User> findByUsername(String username);
-	@Cacheable
+	//@Cacheable
 	List<User> findByPassword(String password);
-	@Cacheable
+	//@Cacheable
 	List<User> findByMail(String mail);
-	@Cacheable
+	//@Cacheable
 	List<User> findByBloqueado(Boolean bloqueado);
-	@Cacheable
+	//@Cacheable
 	List<User> findByAdmin(Boolean admin);
 
 }
